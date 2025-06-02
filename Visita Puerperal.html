@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texto com Botões de Copiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .text {
+            flex: 1;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <div class="text">Visita puerperal.</div>
+            <button onclick="copiarTexto('Visita puerperal.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Puérpera segue em BEG consciente, eupneico(a) em AA,afebril.Sangramento fisiologico.</div>
+            <button onclick="copiarTexto('Puérpera segue em BEG consciente, eupneico(a) em AA,afebril.Sangramento fisiologico.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Queixa: Refere desconforto em região de mamilo direito.</div>
+            <button onclick="copiarTexto('Queixa: Refere desconforto em região de mamilo direito.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Queixa-se:.</div>
+            <button onclick="copiarTexto('Queixa-se:.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Puerpera de parto vaginal com data do dia 15/04/2024 em hospital municipal de Varjota.</div>
+            <button onclick="copiarTexto('Puerpera de parto vaginal com data do dia 15/04/2024 em hospital municipal de Varjota.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Puerpera de parto cesariano,segue com cirurgia limpa,sem sinais flogísticos.</div>
+            <button onclick="copiarTexto('Puerpera de parto cesariano,segue com cirurgia limpa,sem sinais flogísticos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Realizado episiotomia, segue com leve desconforto. Inicio de mastire em mama direita.</div>
+            <button onclick="copiarTexto('Realizado episiotomia, segue com leve desconforto. Inicio de mastire em mama direita.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Hidratação,Banho de sol,Alimentação saudável,Uso de Sulfato ferroso por 6 meses,Boa higiene e Repouso quando possível.</div>
+            <button onclick="copiarTexto('Hidratação,Banho de sol,Alimentação saudável,Uso de Sulfato ferroso por 6 meses,Boa higiene e Repouso quando possível.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para registro de exames.</div>
+            <button onclick="copiarTexto('Acesso para registro de exames.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança com desenvolvimento compativel com a idade.</div>
+            <button onclick="copiarTexto('Criança com desenvolvimento compativel com a idade.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Idade corrigida para idade de.</div>
+            <button onclick="copiarTexto('Idade corrigida para idade de.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança apresenta atraso em.</div>
+            <button onclick="copiarTexto('Criança apresenta atraso em.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Sintomático e orientações gerais.</div>
+            <button onclick="copiarTexto('Sintomático e orientações gerais.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança refere.</div>
+            <button onclick="copiarTexto('Criança refere.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">1 Puericultura.</div>
+            <button onclick="copiarTexto('1 Puericultura.')">Copiar</button>
+        </div>
+    </div>
+
+    <script>
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto)
+                .then(() => alert('Texto copiado!'))
+                .catch(err => console.error('Erro ao copiar: ', err));
+        }
+    </script>
+</body>
+</html>
