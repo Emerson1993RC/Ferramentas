@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texto com Botões de Copiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .text {
+            flex: 1;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <div class="text">Consulta de pré- natal.</div>
+            <button onclick="copiarTexto('Consulta de pré- natal.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Gestante segue BEG, calma, consciente, hidratada, eupneica em ar ambiente, afebril, avaliação cardiaca e pulmonar fisiológicas.</div>
+            <button onclick="copiarTexto('Gestante segue BEG, calma, consciente, hidratada, eupneica em ar ambiente, afebril, avaliação cardiaca e pulmonar fisiológicas.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Gestante G00; P0, A00 com IG:00 semanas 00 dias calculada pela DUM 00/00/2025 e DPP: 00/00/2025. No momento segue referindo boa mobilidade fetal, nega perca de LA, cefaleia, escotomas, dor abdominal e outas queixa obstetrica, altura uterina 00 cm. Realizado manobra de Leopold evidenciando situação longitudinal, apresentação.</div>
+            <button onclick="copiarTexto('Gestante G00; P0, A00 com IG:00 semanas 00 dias calculada pela DUM 00/00/2025 e DPP: 00/00/2025. No momento segue referindo boa mobilidade fetal, nega perca de LA, cefaleia, escotomas, dor abdominal e outas queixa obstetrica, altura uterina 00 cm. Realizado manobra de Leopold evidenciando situação longitudinal, apresentação')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">orientações gerais..</div>
+            <button onclick="copiarTexto('orientações gerais.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Prescrevo: ácido fólico: Tomar 01cp 1x por semana; Sulfato ferroso de 40mg 1cp 1x ao dia antes do almoço; Paracetomol 1cp em 6/6hs se dor ou febre.</div>
+            <button onclick="copiarTexto('ácido fólico: Tomar 01cp 1x por semana,Sufato ferroso de 40mg 1cp 1x ao dia antes do almoço; Paracetomol 1cp em 6/6hs se dor ou febre')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Orientações gerais. 
+Solicito exames 01º trimestre;Solicito testes rápidos: HIV, Sífilis, HBsAg, VDRL;Agendo:Dentista;Citopatológico;Próximo Pré-Natal com médico.</div>
+            <button onclick="copiarTexto('Orientações gerais;Solicito exames 01º trimestre;Solicito testes rápidos: HIV, Sífilis, HBsAg, VDRL;Agendo:
+Dentista;Citopatológico;Próximo Pré-Natal com médico.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">0214010082</div>
+            <button onclick="copiarTexto('0214010082')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">0214010040.</div>
+            <button onclick="copiarTexto('0214010040')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">0214010104</div>
+            <button onclick="copiarTexto('0214010104')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">0214010090</div>
+            <button onclick="copiarTexto('0214010090')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Refere dores em BV</div>
+            <button onclick="copiarTexto('Refere dores em BV.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Estratificação de risco:</div>
+            <button onclick="copiarTexto('Estratificação de risco:')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Espaço para texto</div>
+            <button onclick="copiarTexto('Espaço para texto')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Espaço para texto</div>
+            <button onclick="copiarTexto('Espaço para texto.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Espaço para texto</div>
+            <button onclick="copiarTexto('Espaço para texto.')">Copiar</button>
+        </div>
+    </div>
+
+    <script>
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto)
+                .then(() => alert('Texto copiado!'))
+                .catch(err => console.error('Erro ao copiar: ', err));
+        }
+    </script>
+</body>
+</html>
