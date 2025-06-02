@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texto com Botões de Copiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .text {
+            flex: 1;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <div class="text">Monitoramento.</div>
+            <button onclick="copiarTexto('Monitoramento.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Realizo visita domiciliar.</div>
+            <button onclick="copiarTexto('Realizo visita domiciliar.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">HAS.</div>
+            <button onclick="copiarTexto('HAS.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Queixa-se:.</div>
+            <button onclick="copiarTexto('Queixa-se:.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">HAS e DM.</div>
+            <button onclick="copiarTexto('HAS e DM.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para busca ativa de Hipertensos.</div>
+            <button onclick="copiarTexto('Acesso para busca ativa de Hipertensos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para busca ativa de Hipertensos e Diabéticos.</div>
+            <button onclick="copiarTexto('Acesso para busca ativa de Hipertensos e Diabéticos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para busca ativa de Diabeticos.</div>
+            <button onclick="copiarTexto('Acesso para busca ativa de Diabeticos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para registro de exames.</div>
+            <button onclick="copiarTexto('Acesso para registro de exames.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Promoção e prevenção de saúde dos hipertensos.</div>
+            <button onclick="copiarTexto('Promoção e prevenção de saúde dos hipertensos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Promoção e prevenção de saúde dos hipertensos e diabéticos.</div>
+            <button onclick="copiarTexto('Promoção e prevenção de saúde dos hipertensos e diabéticos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Rotina para HAS.</div>
+            <button onclick="copiarTexto('Rotina para HAS.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Sintomático e orientações gerais.</div>
+            <button onclick="copiarTexto('Sintomático e orientações gerais.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Rotina para HAS e DM</div>
+            <button onclick="copiarTexto('Rotina para HAS e DM')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Rotina para DM.</div>
+            <button onclick="copiarTexto('Rotina para DM.')">Copiar</button>
+        </div>
+    </div>
+
+    <script>
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto)
+                .then(() => alert('Texto copiado!'))
+                .catch(err => console.error('Erro ao copiar: ', err));
+        }
+    </script>
+</body>
+</html>
