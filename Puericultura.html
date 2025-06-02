@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texto com Botões de Copiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .text {
+            flex: 1;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <div class="text">Puericultura.</div>
+            <button onclick="copiarTexto('Puericultura.')">Copiar</button>
+        </div>
+        <div class="container">
+        <div class="item">
+            <div class="text">Acesso para registro do teste do pezinho .</div>
+            <button onclick="copiarTexto('Acesso para registro do teste do pezinho.')">Copiar</button>
+        </div>
+        <div class="container">
+        <div class="item">
+            <div class="text">Exame dentro da normalidade conforme os parâmetros laboratoriais .</div>
+            <button onclick="copiarTexto('Exame dentro da normalidade conforme os parâmetros laboratoriais.')">Copiar</button>
+        </div>
+        <div class="container">
+        <div class="item">
+            <div class="text">Avaliação e acompanhamento continuado na puericultura .</div>
+            <button onclick="copiarTexto('Avaliação e acompanhamento continuado na puericultura .')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Primeira Puericultura.</div>
+            <button onclick="copiarTexto('Primeira Puericultura.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança em BEG, ativo e reativo ao manuseio, eupneico em A/A.ACP:fisiológica;ext:perfundidas.</div>
+            <button onclick="copiarTexto('Criança em BEG, ativo e reativo ao manuseio, eupneico em A/A.ACP:fisiológica;ext:perfundidas.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança com desenvolvimento compativel com a idade.</div>
+            <button onclick="copiarTexto('Criança com desenvolvimento compativel com a idade.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Genitora refere episódios de.</div>
+            <button onclick="copiarTexto('Genitora refere episódios de.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para registro de exames.</div>
+            <button onclick="copiarTexto('Acesso para registro de exames.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Idade corrigida para idade de.</div>
+            <button onclick="copiarTexto('Idade corrigida para idade de.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança apresenta atraso em.</div>
+            <button onclick="copiarTexto('Criança apresenta atraso em.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Sintomático e orientações gerais.</div>
+            <button onclick="copiarTexto('Sintomático e orientações gerais.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança refere.</div>
+            <button onclick="copiarTexto('Criança refere.')">Copiar</button>
+        </div>
+        <div class="container">
+        <div class="item">
+            <div class="text">HAC:1,84;DB:353,21;AFH:FA;Fibrose Cisticia:22,60;HC:0,80
+Fenil:1,14.</div>
+            <button onclick="copiarTexto('HAC:1,84;DB:353,21;AFH:FA;Fibrose Cisticia:22,60;HC:0,80
+Fenil:1,14')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Teste do Pezinho realizado;Deixo solicitado teste da orelhinha e linguinha, ida com 30 dias de nascido p/ profissional fonoaudióloga.</div>
+            <button onclick="copiarTexto('Teste do Pezinho realizado;Deixo solicitado teste da orelhinha e linguinha, ida com 30 dias de nascido p/ profissional fonoaudióloga.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Agendo as próximas puericulturas.</div>
+            <button onclick="copiarTexto('Agendo as próximas puericulturas.')">Copiar</button>
+        </div>
+    </div>
+
+    <script>
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto)
+                .then(() => alert('Texto copiado!'))
+                .catch(err => console.error('Erro ao copiar: ', err));
+        }
+    </script>
+</body>
+</html>
