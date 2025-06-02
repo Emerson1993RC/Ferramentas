@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixa de Texto com Botão Copiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 300px;
+        }
+        textarea {
+            resize: none;
+            width: 100%;
+            height: 100px;
+            font-size: 16px;
+            padding: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <textarea id="textBox" placeholder="Digite ou cole algo aqui..."></textarea>
+        <button onclick="copiarTexto()">Copiar</button>
+    </div>
+
+    <script>
+        function copiarTexto() {
+            const textBox = document.getElementById('textBox');
+            textBox.select();
+            textBox.setSelectionRange(0, 99999); // Para dispositivos móveis
+            navigator.clipboard.writeText(textBox.value)
+                .then(() => alert('Texto copiado!'))
+                .catch(err => console.error('Erro ao copiar: ', err));
+        }
+    </script>
+</body>
+</html>
