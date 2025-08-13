@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-
+
+scale=1.0">
+    <title>Texto com Botões de Copiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .text {
+            flex: 1;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <div class="text">Paciente procura a USF para 
+
+atendimento.</div>
+            <button onclick="copiarTexto('Paciente procura a USF para 
+
+atendimento.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança com sua genitora procura a USF 
+
+para atendimento.</div>
+            <button onclick="copiarTexto('Criança com sua genitora 
+
+procura a USF para atendimento.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Adolescente procura atendimento com seu 
+
+responsavél.</div>
+            <button onclick="copiarTexto('Adolescente procura 
+
+atendimento com seu responsavél.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Segue em BEG, consciente, eupneico(a) em 
+
+AA, afebril.</div>
+            <button onclick="copiarTexto('Segue em BEG, consciente, 
+
+eupneico(a) em AA, afebril.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Criança em BEG, ativa, eupneica em A/A, 
+
+afebril no momento.</div>
+            <button onclick="copiarTexto('Criança em BEG, ativa, 
+
+eupneica em A/A, afebril no momento, chorosa.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Acesso para registro de testes 
+
+rápidos.</div>
+            <button onclick="copiarTexto('Acesso para registro de 
+
+testes rápidos.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Refere.</div>
+            <button onclick="copiarTexto('Refere.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Genitora refere episódios de.</div>
+            <button onclick="copiarTexto('Genitora refere episódios 
+
+de.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Renovação de medicamentos para HAS e 
+
+DM.</div>
+            <button onclick="copiarTexto('Renovação de medicamentos 
+
+para HAS e DM.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Paciente trás exames.</div>
+            <button onclick="copiarTexto('Paciente trás 
+
+exames.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Adolescente refere.</div>
+            <button onclick="copiarTexto('Adolescente 
+
+refere.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Todos os testes resultaram em não 
+
+reagentes para Hepatite B e C, sífilis e HIV.</div>
+            <button onclick="copiarTexto('Todos os testes resultaram 
+
+em não reagentes para Hepatite B e C, sífilis e 
+
+HIV.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Sintomático e orientações gerais.</div>
+            <button onclick="copiarTexto('Sintomático e orientações 
+
+gerais.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Renovo medicação.</div>
+            <button onclick="copiarTexto('Renovo 
+
+medicação.')">Copiar</button>
+        </div>
+        <div class="item">
+            <div class="text">Planejamento familiar.</div>
+            <button onclick="copiarTexto('Planejamento 
+
+familiar.')">Copiar</button>
+        </div>
+    </div>
+
+    <script>
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto)
+                .then(() => alert('Texto copiado!'))
+                .catch(err => console.error('Erro ao copiar: ', err));
+        }
+    </script>
+</body>
+</html>
