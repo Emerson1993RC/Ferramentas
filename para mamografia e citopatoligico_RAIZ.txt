@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frases Personalizadas para Copiar</title>
+    <!-- Inclui Tailwind CSS para estilização -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo personalizado para a fonte Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para o textarea para garantir que o texto não quebre de forma estranha */
+        textarea {
+            white-space: pre-wrap; /* Preserva espaços em branco e quebras de linha */
+            word-wrap: break-word; /* Quebra palavras longas */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Texto para PEC - Citopatologico e Mamografia</h1>
+
+        <!-- Seção de Citopatológico Detalhado -->
+        <div class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Detalhes do Citopatológico:</h2>
+
+            <!-- Item: Subtitulo -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Subtitulo:</div>
+                <textarea id="citopatologicoSubtitulo"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Acesso para registro de resultado de citopatológico</textarea>
+                <button onclick="copyToClipboard('citopatologicoSubtitulo')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Objetivo -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Objetivo:</div>
+                <textarea id="citopatologicoObjetivo"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Rastreio de citopatológico</textarea>
+                <button onclick="copyToClipboard('citopatologicoObjetivo')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Resultado de exame 1 -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Resultado de exame 1:</div>
+                <textarea id="citopatologicoResultado1"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>cód: 0203010086</textarea>
+                <button onclick="copyToClipboard('citopatologicoResultado1')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Resultado de exame 2 -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Resultado de exame 2:</div>
+                <textarea id="citopatologicoResultado2"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Sem alterações para malignidade</textarea>
+                <button onclick="copyToClipboard('citopatologicoResultado2')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Avaliação -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Avaliação:</div>
+                <textarea id="citopatologicoAvaliacao"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Exame citopatológico: Sem alterações para malignidade</textarea>
+                <button onclick="copyToClipboard('citopatologicoAvaliacao')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Plano -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Plano:</div>
+                <textarea id="citopatologicoPlano"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Promoção e prevenção da saúde mulher</textarea>
+                <button onclick="copyToClipboard('citopatologicoPlano')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+        </div>
+
+        <!-- Seção de Mamografia Detalhada -->
+        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Detalhes da Mamografia:</h2>
+
+            <!-- Item: Subtitulo -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Subtitulo:</div>
+                <textarea id="mamografiaSubtitulo"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Acesso para registro de resultado de mamografia</textarea>
+                <button onclick="copyToClipboard('mamografiaSubtitulo')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Objetivo -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Objetivo:</div>
+                <textarea id="mamografiaObjetivo"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Rastreio de Mamografia</textarea>
+                <button onclick="copyToClipboard('mamografiaObjetivo')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Resultado de exame 1 -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Resultado de exame 1:</div>
+                <textarea id="mamografiaResultado1"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>cód: 0204030188</textarea>
+                <button onclick="copyToClipboard('mamografiaResultado1')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Resultado de exame 2 -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Resultado de exame 2:</div>
+                <textarea id="mamografiaResultado2"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Sem alterações para malignidade</textarea>
+                <button onclick="copyToClipboard('mamografiaResultado2')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Avaliação -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 mb-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Avaliação:</div>
+                <textarea id="mamografiaAvaliacao"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Exame de mamografia: Sem alterações para malignidade</textarea>
+                <button onclick="copyToClipboard('mamografiaAvaliacao')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+
+            <!-- Item: Plano -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
+                <div class="font-medium text-gray-600 w-full md:w-1/4 flex-shrink-0">Plano:</div>
+                <textarea id="mamografiaPlano"
+                          class="flex-grow p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white resize-y min-h-[50px]"
+                          rows="2" readonly>Promoção e prevenção da saúde mulher</textarea>
+                <button onclick="copyToClipboard('mamografiaPlano')"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out whitespace-nowrap">
+                    Copiar
+                </button>
+            </div>
+        </div>
+
+        <!-- Mensagem de feedback de cópia -->
+        <div id="copyFeedback" class="hidden fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300 ease-in-out">
+            Copiado!
+        </div>
+    </div>
+
+    <script>
+        // Função para copiar o texto para a área de transferência
+        function copyToClipboard(elementId) {
+            const textarea = document.getElementById(elementId);
+            textarea.select(); // Seleciona o texto dentro do textarea
+            textarea.setSelectionRange(0, 99999); // Para dispositivos móveis
+
+            try {
+                // Tenta copiar o texto para a área de transferência
+                document.execCommand('copy');
+                showFeedbackMessage(); // Mostra a mensagem de feedback
+            } catch (err) {
+                console.error('Erro ao copiar: ', err); // Loga o erro no console
+                // Em vez de alert(), você pode mostrar uma mensagem de erro na tela
+                // Por exemplo: displayErrorMessage('Não foi possível copiar o texto. Por favor, tente manualmente.');
+            }
+        }
+
+        // Função para mostrar a mensagem de feedback "Copiado!"
+        function showFeedbackMessage() {
+            const feedback = document.getElementById('copyFeedback');
+            feedback.classList.remove('hidden'); // Torna a mensagem visível
+            feedback.classList.add('opacity-100'); // Garante opacidade total
+
+            // Esconde a mensagem após 2 segundos
+            setTimeout(() => {
+                feedback.classList.remove('opacity-100'); // Inicia a transição para esconder
+                feedback.classList.add('opacity-0'); // Torna a mensagem transparente
+                // Após a transição, esconde completamente a mensagem para não ocupar espaço
+                setTimeout(() => {
+                    feedback.classList.add('hidden');
+                }, 300); // Tempo da transição CSS (deve corresponder ao transition-duration)
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
