@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentos de uso do enfermeiro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        .link-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .link-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Documentos de uso do enfermeiro</h1>
+    
+    <a href="https://drive.google.com/drive/folders/1VbtnBH1wrrgn-Le7awhraVHzgxcIfsoj?usp=sharing" class="link-button" target="_blank">Drive Primcipal</a>
+    
+    <a href="https://docs.google.com/spreadsheets/d/1A2z8jko3qpGCevYD5FPpdLADjjs8e9Qp/edit?usp=sharing&ouid=111746618416225593861&rtpof=true&sd=true" target="_blank">Ficha de controle</a>
+    
+    <a href="https://docs.google.com/spreadsheets/d/1fN5C_1JnSLgx7N8balFYb-AnoSBkFWic/edit?usp=sharing&ouid=111746618416225593861&rtpof=true&sd=true" class="link-button" target="_blank">Produção da ACS</a>
+    
+    <a href="https://emerson1993rc.github.io/Ferramentas/Visita%20Puerperal.html" class="link-button" target="_blank">Visita Puerperal</a>
+    
+    <a href="https://emerson1993rc.github.io/Ferramentas/Puericultura.html" class="link-button" target="_blank">Puericultura</a>
+    
+    <a href="https://emerson1993rc.github.io/Ferramentas/para-mamografia-citopatoligico.html" class="link-button" target="_blank">Mamografia e Citopatológico</a>
+
+    </div>
+
+</body>
+</html>
