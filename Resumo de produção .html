@@ -2,220 +2,182 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Extrator de Dados de PDF</title>
+  <title>Leitor de Relatórios PEC</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
-    /* Estilos personalizados para a interface */
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-      color: #1f2937;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
     }
     .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background-color: #ffffff;
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+    }
+    input[type=file] {
+      display: block;
+      margin: 0 auto 20px auto;
+      padding: 10px;
+    }
+    .card {
+      background: #f9fbfd;
+      border: 1px solid #e0e6ed;
       border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      margin-bottom: 20px;
     }
-    #loading {
-      color: #6b7280;
-      font-style: italic;
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #007bff;
     }
-    pre {
-      background-color: #111827;
-      color: #e5e7eb;
-      padding: 1.5rem;
+    .card p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-size: 1rem;
       border-radius: 8px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-    }
-    .file-input-wrapper {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-    }
-    .file-input-wrapper input[type=file] {
-      font-size: 100px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.75rem 1.5rem;
-      font-weight: 600;
-      border-radius: 9999px;
-      background-color: #3b82f6;
-      color: #ffffff;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background 0.2s;
     }
-    .btn:hover {
-      background-color: #2563eb;
+    button:hover {
+      background: #0056b3;
+    }
+    @media (max-width: 480px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+      h1 { font-size: 1.3rem; }
     }
   </style>
 </head>
-<body class="p-4">
-  <div class="container text-center">
-    <h1 class="text-3xl font-bold mb-4 flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Extrator de Dados de PDF
-    </h1>
-    <p class="text-gray-600 mb-6">Carregue um arquivo PDF para extrair informações específicas.</p>
-    
-    <div class="file-input-wrapper mb-6">
-      <button class="btn">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12V3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9"/><path d="M12 17v5"/><path d="M8 21h8"/></svg>
-        Escolher Arquivo PDF
-      </button>
-      <input type="file" id="upload" accept="application/pdf">
-    </div>
-    
-    <div id="status" class="mb-4 text-sm text-gray-500"></div>
-    
-    <pre id="resultado" class="text-left hidden"></pre>
+<body>
+  <div class="container">
+    <h1>📑 Leitor de Relatórios PEC</h1>
+    <input type="file" id="upload" accept="application/pdf" />
+    <div id="cards"></div>
+    <button id="downloadExcel" style="display:none;">⬇️ Baixar Excel</button>
   </div>
 
   <script>
-    // Configura o worker da PDF.js para processar o PDF
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
+    let dadosExtraidos = {};
 
     document.getElementById('upload').addEventListener('change', async function (e) {
       const file = e.target.files[0];
-      if (!file) {
-        return;
+      if (!file) return;
+
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      let textoCompleto = "";
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const strings = content.items.map(item => item.str);
+        textoCompleto += strings.join(" ") + "\n";
       }
 
-      const status = document.getElementById('status');
-      const resultado = document.getElementById('resultado');
-
-      status.textContent = `🔍 Processando: ${file.name}`;
-      resultado.classList.add('hidden');
-      resultado.textContent = '';
-
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-        
-        let textoCompleto = "";
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          // Junta as strings de forma mais robusta para lidar com quebras de linha
-          const strings = content.items.map(item => item.str).join(' ');
-          textoCompleto += strings;
-        }
-
-        // Dicionário para armazenar os dados extraídos
-        const dados = {
-          resumo: {},
-          ciap2: {},
-          cid10: {},
-          gerais: {},
-          exames: {}
-        };
-
-        // Função auxiliar para encontrar valores
-        function encontrarValor(regex, texto) {
-          const match = texto.match(regex);
-          return match ? parseInt(match[1]) : 0;
-        }
-
-        // Expressões regulares mais flexíveis
-        const regex_resumo_identificados = /Registros identificados.*?(\d+)/;
-        const regex_resumo_nao_identificados = /Registros não identificados.*?(\d+)/;
-        const regex_resumo_total = /Total:?[\s]*(\d+)/;
-        
-        // CIAP2
-        const regex_ciap2_w78 = /W78\s*-\s*Gravidez.*?(\d+)/i;
-        const regex_ciap2_t90 = /T90\s*-\s*Diabetes Não Insulino-Dependente.*?(\d+)/i;
-        const regex_ciap2_k86 = /K86\s*-\s*Hipertensão Sem Complicações.*?(\d+)/i;
-        
-        // CID10
-        const regex_cid10_i10 = /I10\s*-\s*Hipertensão Essencial \(Primária\).*?(\d+)/i;
-        const regex_cid10_e10 = /E10\s*-\s*DIABETES MELLITUS INSULINO DEPENDENTE.*?(\d+)/i;
-        
-        // Condições Gerais
-        const regex_gerais_puericultura = /Puericultura.*?(\d+)/i;
-        const regex_gerais_gestantes = /Gestantes.*?(\d+)/i;
-
-        // Exames Solicitados
-        const regex_exames_hemoglobina = /Hemoglobina Glicada.*?Solicitado.*?(\d+)/i;
-        const regex_exames_ultrassonografia = /ULTRASSONOGRAFIA.*?Solicitado.*?(\d+)/i;
-        const regex_exames_eletrocardiograma = /Eletrocardiograma.*?Solicitado.*?(\d+)/i;
-
-        // Extração dos dados
-        dados.resumo.identificados = encontrarValor(regex_resumo_identificados, textoCompleto);
-        dados.resumo.nao_identificados = encontrarValor(regex_resumo_nao_identificados, textoCompleto);
-        dados.resumo.total = encontrarValor(regex_resumo_total, textoCompleto);
-
-        dados.ciap2.w78 = encontrarValor(regex_ciap2_w78, textoCompleto);
-        dados.ciap2.t90 = encontrarValor(regex_ciap2_t90, textoCompleto);
-        dados.ciap2.k86 = encontrarValor(regex_ciap2_k86, textoCompleto);
-
-        dados.cid10.i10 = encontrarValor(regex_cid10_i10, textoCompleto);
-        dados.cid10.e10 = encontrarValor(regex_cid10_e10, textoCompleto);
-
-        dados.gerais.puericultura = encontrarValor(regex_gerais_puericultura, textoCompleto);
-        dados.gerais.gestantes = encontrarValor(regex_gerais_gestantes, textoCompleto);
-
-        dados.exames.hemoglobina = encontrarValor(regex_exames_hemoglobina, textoCompleto);
-        dados.exames.ultrassonografia = encontrarValor(regex_exames_ultrassonografia, textoCompleto);
-        dados.exames.eletrocardiograma = encontrarValor(regex_exames_eletrocardiograma, textoCompleto);
-
-        // Gera a saída formatada
-        const saida = `
-============================================================
-RESUMO DE PRODUÇÃO
-============================================================
-Registros Identificados: ${dados.resumo.identificados}
-Registros Nao Identificados: ${dados.resumo.nao_identificados}
-Total: ${dados.resumo.total}
-
-============================================================
-PROBLEMAS/CONDIÇÕES - CIAP2
-============================================================
-W78 - Gravidez: ${dados.ciap2.w78}
-T90 - Diabetes Não Insulino-Dependente: ${dados.ciap2.t90}
-K86 - Hipertensão Sem Complicações: ${dados.ciap2.k86}
-
-============================================================
-PROBLEMAS/CONDIÇÕES - CID10
-============================================================
-I10 - Hipertensão Essencial (Primária): ${dados.cid10.i10}
-E10 - Diabetes Mellitus Insulino-Dependente: ${dados.cid10.e10}
-
-============================================================
-PROBLEMAS/CONDIÇÕES GERAIS
-============================================================
-Puericultura: ${dados.gerais.puericultura}
-Gestantes: ${dados.gerais.gestantes}
-
-============================================================
-EXAMES SOLICITADOS
-============================================================
-Hemoglobina Glicada (Solicitados): ${dados.exames.hemoglobina}
-Ultrassonografia (Solicitados): ${dados.exames.ultrassonografia}
-Eletrocardiograma (Solicitados): ${dados.exames.eletrocardiograma}
-============================================================
-`;
-        resultado.textContent = saida;
-        resultado.classList.remove('hidden');
-        status.textContent = `✅ ${file.name} processado com sucesso!`;
-
-      } catch (error) {
-        status.textContent = `❌ Erro ao processar o arquivo: ${error.message}`;
-        resultado.classList.add('hidden');
-        console.error(error);
+      function extrair(pattern) {
+        const match = textoCompleto.match(pattern);
+        return match ? match[1] : "0";
       }
+
+      dadosExtraidos = {
+        resumo: {
+          registrosIdentificados: extrair(/Registros\s+identificados\s+(\d+)/i),
+          registrosNaoIdentificados: extrair(/Registros\s+n[ãa]o\s+identificados\s+(\d+)/i),
+          total: extrair(/(\d+)\s*Total:/i)
+        },
+        ciap2: {
+          W78: extrair(/W78\s*-\s*GRAVIDEZ\s+(\d+)/i),
+          T90: extrair(/T90\s*-\s*DIABETES\s+N[ÃA]O\s+INSULINO.*DEPENDENTE\s+(\d+)/i),
+          K86: extrair(/K86\s*-\s*HIPERTENS[ÃA]O\s+SEM\s+COMPLICA[ÇC][ÃA]OES\s+(\d+)/i)
+        },
+        cid10: {
+          I10: extrair(/I10\s*-\s*HIPERTENS[ÃA]O\s+ESSENCIAL.*?\s+(\d+)/i),
+          E10: extrair(/E10\s*-\s*DIABETES\s+MELLITUS\s+INSULINO.*DEPENDENTE\s+(\d+)/i)
+        },
+        gerais: {
+          puericultura: extrair(/Puericultura\s+(\d+)/i),
+          gestantes: extrair(/Gestante\s+(\d+)/i)
+        }
+      };
+
+      const cardsDiv = document.getElementById("cards");
+      cardsDiv.innerHTML = `
+        <div class="card">
+          <h2>📊 Resumo de Produção</h2>
+          <p>Registros Identificados: ${dadosExtraidos.resumo.registrosIdentificados}</p>
+          <p>Registros Não Identificados: ${dadosExtraidos.resumo.registrosNaoIdentificados}</p>
+          <p>Total: ${dadosExtraidos.resumo.total}</p>
+        </div>
+        <div class="card">
+          <h2>🩺 Problemas/Condições - CIAP2</h2>
+          <p>W78 - Gravidez: ${dadosExtraidos.ciap2.W78}</p>
+          <p>T90 - Diabetes Não Insulino-Dependente: ${dadosExtraidos.ciap2.T90}</p>
+          <p>K86 - Hipertensão Sem Complicações: ${dadosExtraidos.ciap2.K86}</p>
+        </div>
+        <div class="card">
+          <h2>📖 Problemas/Condições - CID10</h2>
+          <p>I10 - Hipertensão Essencial (Primária): ${dadosExtraidos.cid10.I10}</p>
+          <p>E10 - Diabetes Mellitus Insulino-Dependente: ${dadosExtraidos.cid10.E10}</p>
+        </div>
+        <div class="card">
+          <h2>👶 Problemas/Condições Gerais</h2>
+          <p>Puericultura: ${dadosExtraidos.gerais.puericultura}</p>
+          <p>Gestantes: ${dadosExtraidos.gerais.gestantes}</p>
+        </div>
+      `;
+
+      document.getElementById("downloadExcel").style.display = "block";
     });
 
+    document.getElementById("downloadExcel").addEventListener("click", function () {
+      const ws_data = [
+        ["Categoria", "Indicador", "Valor"],
+        ["Resumo de Produção", "Registros Identificados", dadosExtraidos.resumo.registrosIdentificados],
+        ["Resumo de Produção", "Registros Não Identificados", dadosExtraidos.resumo.registrosNaoIdentificados],
+        ["Resumo de Produção", "Total", dadosExtraidos.resumo.total],
+        ["CIAP2", "W78 - Gravidez", dadosExtraidos.ciap2.W78],
+        ["CIAP2", "T90 - Diabetes Não Insulino-Dependente", dadosExtraidos.ciap2.T90],
+        ["CIAP2", "K86 - Hipertensão Sem Complicações", dadosExtraidos.ciap2.K86],
+        ["CID10", "I10 - Hipertensão Essencial (Primária)", dadosExtraidos.cid10.I10],
+        ["CID10", "E10 - Diabetes Mellitus Insulino-Dependente", dadosExtraidos.cid10.E10],
+        ["Gerais", "Puericultura", dadosExtraidos.gerais.puericultura],
+        ["Gerais", "Gestantes", dadosExtraidos.gerais.gestantes]
+      ];
+
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Resumo");
+
+      XLSX.writeFile(wb, "resumo_producao.xlsx");
+    });
   </script>
 </body>
 </html>
