@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Leitor de Relatórios PEC</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script 
+
+src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js
+
+"></script>
+  <script 
+
+src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.
+
+js"></script>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -81,18 +89,24 @@
     <h1>📑 Leitor de Relatórios PEC</h1>
     <input type="file" id="upload" accept="application/pdf" />
     <div id="cards"></div>
-    <button id="downloadExcel" style="display:none;">⬇️ Baixar Excel</button>
+    <button id="downloadExcel" style="display:none;">⬇️ Baixar 
+
+Excel</button>
   </div>
 
   <script>
     let dadosExtraidos = {};
 
-    document.getElementById('upload').addEventListener('change', async function (e) {
+    document.getElementById('upload').addEventListener('change', async 
+
+function (e) {
       const file = e.target.files[0];
       if (!file) return;
 
       const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer 
+
+}).promise;
 
       let textoCompleto = "";
       for (let i = 1; i <= pdf.numPages; i++) {
@@ -104,23 +118,35 @@
 
       function extrair(pattern) {
         const match = textoCompleto.match(pattern);
-        return match ? match[1] : "0";
+        return match ? match[1].replace(/\D/g, '') : "0";
       }
 
       dadosExtraidos = {
         resumo: {
-          registrosIdentificados: extrair(/Registros\s+identificados\s+(\d+)/i),
-          registrosNaoIdentificados: extrair(/Registros\s+n[ãa]o\s+identificados\s+(\d+)/i),
+          registrosIdentificados: extrair(/Registros\s+identificados
+
+\s+(\d+)/i),
+          registrosNaoIdentificados: extrair(/Registros\s+n[ãa]o\s
+
++identificados\s+(\d+)/i),
           total: extrair(/(\d+)\s*Total:/i)
         },
         ciap2: {
           W78: extrair(/W78\s*-\s*GRAVIDEZ\s+(\d+)/i),
-          T90: extrair(/T90\s*-\s*DIABETES\s+N[ÃA]O\s+INSULINO.*DEPENDENTE\s+(\d+)/i),
-          K86: extrair(/K86\s*-\s*HIPERTENS[ÃA]O\s+SEM\s+COMPLICA[ÇC][ÃA]OES\s+(\d+)/i)
+          T90: extrair(/T90\s*-\s*DIABETES\s+N[ÃA]O\s
+
++INSULINO.*DEPENDENTE\s+(\d+)/i),
+          K86: extrair(/K86\s*-\s*HIPERTENS[ÃA]O\s+SEM\s+COMPLICA[ÇC]
+
+[ÕO]ES?.*?\s+(\d+)/i)
         },
         cid10: {
-          I10: extrair(/I10\s*-\s*HIPERTENS[ÃA]O\s+ESSENCIAL.*?\s+(\d+)/i),
-          E10: extrair(/E10\s*-\s*DIABETES\s+MELLITUS\s+INSULINO.*DEPENDENTE\s+(\d+)/i)
+          I10: extrair(/I10\s*-\s*HIPERTENS[ÃA]O\s+ESSENCIAL.*?\s+(\d
+
++)/i),
+          E10: extrair(/E10\s*-\s*DIABETES\s+MELLITUS\s
+
++INSULINO.*DEPENDENTE\s+(\d+)/i)
         },
         gerais: {
           puericultura: extrair(/Puericultura\s+(\d+)/i),
@@ -132,20 +158,32 @@
       cardsDiv.innerHTML = `
         <div class="card">
           <h2>📊 Resumo de Produção</h2>
-          <p>Registros Identificados: ${dadosExtraidos.resumo.registrosIdentificados}</p>
-          <p>Registros Não Identificados: ${dadosExtraidos.resumo.registrosNaoIdentificados}</p>
+          <p>Registros Identificados: 
+
+${dadosExtraidos.resumo.registrosIdentificados}</p>
+          <p>Registros Não Identificados: 
+
+${dadosExtraidos.resumo.registrosNaoIdentificados}</p>
           <p>Total: ${dadosExtraidos.resumo.total}</p>
         </div>
         <div class="card">
           <h2>🩺 Problemas/Condições - CIAP2</h2>
           <p>W78 - Gravidez: ${dadosExtraidos.ciap2.W78}</p>
-          <p>T90 - Diabetes Não Insulino-Dependente: ${dadosExtraidos.ciap2.T90}</p>
-          <p>K86 - Hipertensão Sem Complicações: ${dadosExtraidos.ciap2.K86}</p>
+          <p>T90 - Diabetes Não Insulino-Dependente: 
+
+${dadosExtraidos.ciap2.T90}</p>
+          <p>K86 - Hipertensão Sem Complicações: 
+
+${dadosExtraidos.ciap2.K86}</p>
         </div>
         <div class="card">
           <h2>📖 Problemas/Condições - CID10</h2>
-          <p>I10 - Hipertensão Essencial (Primária): ${dadosExtraidos.cid10.I10}</p>
-          <p>E10 - Diabetes Mellitus Insulino-Dependente: ${dadosExtraidos.cid10.E10}</p>
+          <p>I10 - Hipertensão Essencial (Primária): 
+
+${dadosExtraidos.cid10.I10}</p>
+          <p>E10 - Diabetes Mellitus Insulino-Dependente: 
+
+${dadosExtraidos.cid10.E10}</p>
         </div>
         <div class="card">
           <h2>👶 Problemas/Condições Gerais</h2>
@@ -154,21 +192,39 @@
         </div>
       `;
 
-      document.getElementById("downloadExcel").style.display = "block";
+      document.getElementById("downloadExcel").style.display = 
+
+"block";
     });
 
-    document.getElementById("downloadExcel").addEventListener("click", function () {
+    document.getElementById("downloadExcel").addEventListener("click", 
+
+function () {
       const ws_data = [
         ["Categoria", "Indicador", "Valor"],
-        ["Resumo de Produção", "Registros Identificados", dadosExtraidos.resumo.registrosIdentificados],
-        ["Resumo de Produção", "Registros Não Identificados", dadosExtraidos.resumo.registrosNaoIdentificados],
+        ["Resumo de Produção", "Registros Identificados", 
+
+dadosExtraidos.resumo.registrosIdentificados],
+        ["Resumo de Produção", "Registros Não Identificados", 
+
+dadosExtraidos.resumo.registrosNaoIdentificados],
         ["Resumo de Produção", "Total", dadosExtraidos.resumo.total],
         ["CIAP2", "W78 - Gravidez", dadosExtraidos.ciap2.W78],
-        ["CIAP2", "T90 - Diabetes Não Insulino-Dependente", dadosExtraidos.ciap2.T90],
-        ["CIAP2", "K86 - Hipertensão Sem Complicações", dadosExtraidos.ciap2.K86],
-        ["CID10", "I10 - Hipertensão Essencial (Primária)", dadosExtraidos.cid10.I10],
-        ["CID10", "E10 - Diabetes Mellitus Insulino-Dependente", dadosExtraidos.cid10.E10],
-        ["Gerais", "Puericultura", dadosExtraidos.gerais.puericultura],
+        ["CIAP2", "T90 - Diabetes Não Insulino-Dependente", 
+
+dadosExtraidos.ciap2.T90],
+        ["CIAP2", "K86 - Hipertensão Sem Complicações", 
+
+dadosExtraidos.ciap2.K86],
+        ["CID10", "I10 - Hipertensão Essencial (Primária)", 
+
+dadosExtraidos.cid10.I10],
+        ["CID10", "E10 - Diabetes Mellitus Insulino-Dependente", 
+
+dadosExtraidos.cid10.E10],
+        ["Gerais", "Puericultura", 
+
+dadosExtraidos.gerais.puericultura],
         ["Gerais", "Gestantes", dadosExtraidos.gerais.gestantes]
       ];
 
