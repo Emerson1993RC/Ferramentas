@@ -1,83 +1,277 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATUALIZAÇÃO DE DADOS PARA ANALISE DOS INDICADORES</title>
+    <title>Dashboard - Indicadores de Saúde</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
         .container {
-            text-align: center;
-            background-color: #fff;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
+
         h1 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 24px;
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.8em;
         }
-        .link-button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #007bff;
-            color: white;
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 25px 8px 8px;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            margin: 8px;
         }
-        .link-button:hover {
-            background-color: #0056b3;
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .btn-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3748;
+            white-space: nowrap;
+        }
+
+        /* Cores dos ícones circulares */
+        .btn-blue .btn-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-green .btn-icon {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-teal .btn-icon {
+            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+        }
+
+        .btn-cyan .btn-icon {
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+        }
+
+        .btn-emerald .btn-icon {
+            background: linear-gradient(135deg, #134e5e 0%, #71b280 100%);
+        }
+
+        .btn-mint .btn-icon {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+        }
+
+        .btn-ocean .btn-icon {
+            background: linear-gradient(135deg, #2e3192 0%, #1bffff 100%);
+        }
+
+        .btn-forest .btn-icon {
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+        }
+
+        .btn-orange .btn-icon {
+            background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+        }
+
+        .btn-pink .btn-icon {
+            background: linear-gradient(135deg, #ff6a88 0%, #ff99ac 100%);
+        }
+
+        /* Seção de adicionar novo link */
+        .add-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .toggle-instructions {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            color: #4a5568;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .toggle-instructions:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .instructions-content {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .instructions-content.show {
+            display: block;
+        }
+
+        .instructions-content h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .instructions-content p {
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .code-example {
+            background: #2d3748;
+            color: #a0aec0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .code-example span {
+            color: #68d391;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.4em;
+            }
+
+            .buttons-grid {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🩺 Atualização de Dados</h1>
+        <p class="subtitle">USF 1 - Croatá dos Martins</p>
 
-<div class="container">
-    <h1>ATUALIZAÇÃO DE DADOS PARA ANALISE DOS INDICADORES</h1>
-    
-    <a href="https://drive.google.com/drive/folders/18yoGnJon-FrmY3vDLXSkQcNBvgZHqzlO?usp=sharing" class="link-button" target="_blank">DRIVE</a>
+        <div class="buttons-grid">
+            <a href="https://drive.google.com/drive/folders/18yoGnJon-FrmY3vDLXSkQcNBvgZHqzlO?usp=sharing" class="btn btn-blue">
+                <div class="btn-icon">📊</div>
+                <span class="btn-text">Fonte dos Dados</span>
+            </a>
 
-    <a href="https://www.appsheet.com/start/92a8f127-0f62-426f-80c6-8088a809b5eb" class="link-button" target="_blank">Visita Domiciliar</a>
+            <a href="https://www.appsheet.com/start/881c89f3-163d-4aac-b066-d984cf1a6591" class="btn btn-green">
+                <div class="btn-icon">🗄️</div>
+                <span class="btn-text">Banco de Dados</span>
+            </a>
 
-    <a href="https://www.appsheet.com/start/cf9b2df4-e68d-4c4e-a00a-342068fa170e" class="link-button" target="_blank">HAS</a>
+            <a href="https://www.appsheet.com/start/92a8f127-0f62-426f-80c6-8088a809b5eb?platform=desktop" class="btn btn-teal">
+                <div class="btn-icon">🏠</div>
+                <span class="btn-text">Visita Domiciliar</span>
+            </a>
 
-    <a href="https://www.appsheet.com/start/ac94a747-b903-466e-8d19-5f68449324b9" class="link-button" target="_blank">DM</a>
+            <a href="https://www.appsheet.com/start/cf9b2df4-e68d-4c4e-a00a-342068fa170e" class="btn btn-cyan">
+                <div class="btn-icon">❤️</div>
+                <span class="btn-text">HAS</span>
+            </a>
 
-    <a href="https://www.appsheet.com/start/376aa0a9-0c29-4096-bc6c-cfc6d66b6935" class="link-button" target="_blank">IDOSO</a>
+            <a href="https://www.appsheet.com/start/ac94a747-b903-466e-8d19-5f68449324b9" class="btn btn-emerald">
+                <div class="btn-icon">💉</div>
+                <span class="btn-text">DM</span>
+            </a>
 
-    <a href="https://www.appsheet.com/start/5158506d-9cd6-4032-8e3e-e2dc52069ea7" class="link-button" target="_blank">SAÚDE DA MULHER</a>
+            <a href="https://www.appsheet.com/start/376aa0a9-0c29-4096-bc6c-cfc6d66b6935" class="btn btn-mint">
+                <div class="btn-icon">👴</div>
+                <span class="btn-text">Idoso</span>
+            </a>
 
-    <a href="https://www.appsheet.com/start/988b68a5-522f-4b4a-a9f9-6c48bd3eabd2" class="link-button" target="_blank">SSR DA MULHER</a>
-    
-    <a href="https://emerson1993rc.github.io/Ferramentas/Acompanhamento.html" class="link-button" target="_blank">PROGRAMAS</a>
-    
-    <a href="https://emerson1993rc.github.io/Ferramentas/botoes.html" class="link-button" target="_blank">PÁG-1</a>
-    
-    </div>
+            <a href="https://www.appsheet.com/start/5158506d-9cd6-4032-8e3e-e2dc52069ea7" class="btn btn-ocean">
+                <div class="btn-icon">👩‍⚕️</div>
+                <span class="btn-text">Saúde da Mulher</span>
+            </a>
 
+            <a href="https://www.appsheet.com/start/988b68a5-522f-4b4a-a9f9-6c48bd3eabd2" class="btn btn-forest">
+                <div class="btn-icon">💊</div>
+                <span class="btn-text">SSR da Mulher</span>
+            </a>
+
+            <a href="https://emerson1993rc.github.io/Ferramentas/Acompanhamento.html" class="btn btn-orange">
+                <div class="btn-icon">📋</div>
+                <span class="btn-text">Programas</span>
+            </a>
+
+            <a href="https://emerson1993rc.github.io/Ferramentas/botoes.html" class="btn btn-pink">
+                <div class="btn-icon">⬅️</div>
+                <span class="btn-text">Retornar para PÁG-1</span>
+            </a>
+
+                       
+        </div>
+
+      
 </body>
-
 </html>
-
-
-
-
-
-
-
