@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Organizador de Busca Ativa</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    textarea { width: 100%; height: 150px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #000; padding: 6px; font-size: 12px; }
+    th { background: #eee; }
+    .red { background-color: #f8d7da; }
+    .orange { background-color: #fff3cd; }
+    .yellow { background-color: #fff9c4; }
+    .controls { margin-bottom: 10px; }
+    button { padding: 8px 12px; cursor: pointer; margin-top: 5px; }
+    @media print {
+      textarea, .controls { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Lista de Busca Ativa</h1>
+
+<div class="controls">
+  <label><strong>Cole os dados aqui:</strong></label>
+  <textarea id="entrada" placeholder="Cole aqui o CSV..."></textarea><br>
+  <button onclick="gerarTabela()">Gerar Tabela</button>
+  <button onclick="window.print()">Imprimir / Salvar em PDF</button>
+</div>
+
+<table id="tabela">
+  <thead>
+    <tr id="cabecalho"></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+function getClasse(status) {
+  if (status.includes("🔴")) return "red";
+  if (status.includes("🟠")) return "orange";
+  if (status.includes("🟡")) return "yellow";
+  return "";
+}
+
+function gerarTabela() {
+  const texto = document.getElementById("entrada").value.trim();
+  const linhas = texto.split("\n");
+  const tbody = document.querySelector("#tabela tbody");
+  const cabecalho = document.getElementById("cabecalho");
+
+  tbody.innerHTML = "";
+  cabecalho.innerHTML = "";
+
+  // Detecta formato pela quantidade de colunas da primeira linha válida
+  const primeiraLinha = linhas.find(l => l.split(",").length >= 6);
+  if (!primeiraLinha) return;
+
+  const colunas = primeiraLinha.split(",").length;
+
+  if (colunas === 7) {
+    // Formato antigo
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Microárea</th>
+      <th>Peso/Altura</th>
+      <th>PA</th>
+      <th>Consulta</th>
+      <th>Status</th>
+    `;
+
+    linhas.forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 7) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[6]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col[5]}</td>
+        <td>${col[6]}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+  } else if (colunas === 6) {
+    // Novo formato
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Microárea</th>
+      <th>Status</th>
+      <th>PA</th>
+      <th>Consulta</th>
+    `;
+
+    linhas.forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 6) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[3]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col[5]}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+}
+</script>
+
+</body>
+</html>
