@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Indicador C1 - Mais Acesso</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container { max-width: 1000px; margin: auto; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    h1 { text-align: center; }
+    input { padding: 10px; margin: 5px; width: 150px; }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .resultado { font-size: 28px; margin-top: 10px; }
+    .status { font-size: 18px; margin-top: 5px; font-weight: bold; }
+    .legenda { margin-top: 15px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Indicador C1 - Mais Acesso</h1>
+
+  <div class="card">
+    <h3>Upload do PDF do PEC</h3>
+    <input type="file" id="pdfUpload" accept="application/pdf">
+    <button onclick="lerPDF()">Ler PDF</button>
+  </div>
+
+  <div class="card">
+    <h3>Dados extraídos</h3>
+
+    <input type="number" id="agendada" placeholder="Consulta agendada">
+    <input type="number" id="programada" placeholder="Programada">
+    <input type="number" id="noDia" placeholder="Consulta no dia">
+    <input type="number" id="urgencia" placeholder="Urgência">
+    <input type="number" id="escuta" placeholder="Escuta inicial">
+
+    <br><br>
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="resultado" id="resultado"></div>
+    <div class="status" id="status"></div>
+
+    <div class="legenda">
+      <p><b>Classificação:</b></p>
+      <p>❌ Crítico: até 30%</p>
+      <p>⚠️ Regular: 30% a 50%</p>
+      <p>✅ Bom: 50% a 70%</p>
+      <p>🏆 Ótimo: acima de 70%</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Visualização</h3>
+    <canvas id="grafico"></canvas>
+  </div>
+</div>
+
+<script>
+let chart;
+
+async function lerPDF() {
+  const file = document.getElementById('pdfUpload').files[0];
+  if (!file) return alert('Selecione um PDF');
+
+  const reader = new FileReader();
+  reader.onload = async function() {
+    const typedarray = new Uint8Array(this.result);
+    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+    let textoCompleto = '';
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const strings = content.items.map(item => item.str);
+      textoCompleto += strings.join(' ');
+    }
+
+    extrairDados(textoCompleto);
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+function extrairNumero(texto, termo) {
+  const regex = new RegExp(termo + "\\s+(\\d+)", "i");
+  const match = texto.match(regex);
+  return match ? Number(match[1]) : 0;
+}
+
+function extrairDados(texto) {
+  const agendada = extrairNumero(texto, "Consulta agendada");
+  const programada = extrairNumero(texto, "Cuidado continuado");
+  const noDia = extrairNumero(texto, "Consulta no dia");
+  const urgencia = extrairNumero(texto, "Atendimento de urgência");
+  const escuta = extrairNumero(texto, "Escuta inicial");
+
+  document.getElementById('agendada').value = agendada;
+  document.getElementById('programada').value = programada;
+  document.getElementById('noDia').value = noDia;
+  document.getElementById('urgencia').value = urgencia;
+  document.getElementById('escuta').value = escuta;
+
+  calcular();
+}
+
+function calcular() {
+  const agendada = Number(document.getElementById('agendada').value) || 0;
+  const programada = Number(document.getElementById('programada').value) || 0;
+  const noDia = Number(document.getElementById('noDia').value) || 0;
+  const urgencia = Number(document.getElementById('urgencia').value) || 0;
+  const escuta = Number(document.getElementById('escuta').value) || 0;
+
+  const programadas = agendada + programada;
+  const total = programadas + noDia + urgencia + escuta;
+
+  if (total === 0) return;
+
+  const percentual = (programadas / total) * 100;
+
+  document.getElementById('resultado').innerText = percentual.toFixed(1) + "%";
+
+  let classificacao = "";
+
+  if (percentual <= 30) classificacao = "Crítico";
+  else if (percentual <= 50) classificacao = "Regular";
+  else if (percentual <= 70) classificacao = "Bom";
+  else classificacao = "Ótimo";
+
+  document.getElementById('status').innerText = classificacao;
+
+  gerarGrafico(programadas, total - programadas);
+}
+
+function gerarGrafico(programadas, espontaneas) {
+  const ctx = document.getElementById('grafico').getContext('2d');
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Programada', 'Espontânea'],
+      datasets: [{ data: [programadas, espontaneas] }]
+    }
+  });
+}
+</script>
+
+</body>
+</html>
