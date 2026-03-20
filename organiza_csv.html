@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Organizador de Busca Ativa</title>
+  <title>Organizador de Listas</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     h1 { text-align: center; }
@@ -22,7 +22,7 @@
 </head>
 <body>
 
-<h1>Lista de Busca Ativa</h1>
+<h1>Organizador de Listas</h1>
 
 <div class="controls">
   <label><strong>Cole os dados aqui:</strong></label>
@@ -40,6 +40,7 @@
 
 <script>
 function getClasse(status) {
+  if (!status) return "";
   if (status.includes("🔴")) return "red";
   if (status.includes("🟠")) return "orange";
   if (status.includes("🟡")) return "yellow";
@@ -55,14 +56,41 @@ function gerarTabela() {
   tbody.innerHTML = "";
   cabecalho.innerHTML = "";
 
-  // Detecta formato pela quantidade de colunas da primeira linha válida
-  const primeiraLinha = linhas.find(l => l.split(",").length >= 6);
+  const primeiraLinha = linhas.find(l => l.split(",").length >= 5);
   if (!primeiraLinha) return;
 
   const colunas = primeiraLinha.split(",").length;
 
-  if (colunas === 7) {
-    // Formato antigo
+  // NOVO FORMATO INFANTIL (6 colunas)
+  if (colunas === 6) {
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Micro</th>
+      <th>Idade</th>
+      <th>Situação</th>
+      <th>O que fazer</th>
+    `;
+
+    linhas.forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 6) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[4]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col.slice(5).join(",")}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+  } else if (colunas === 7) {
+    // FORMATO ANTIGO
     cabecalho.innerHTML = `
       <th>Nome</th>
       <th>Microárea</th>
@@ -86,34 +114,6 @@ function gerarTabela() {
         <td>${col[4]}</td>
         <td>${col[5]}</td>
         <td>${col[6]}</td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-
-  } else if (colunas === 6) {
-    // Novo formato
-    cabecalho.innerHTML = `
-      <th>Nome</th>
-      <th>Microárea</th>
-      <th>Status</th>
-      <th>PA</th>
-      <th>Consulta</th>
-    `;
-
-    linhas.forEach(linha => {
-      const col = linha.split(",");
-      if (col.length < 6) return;
-
-      const tr = document.createElement("tr");
-      tr.className = getClasse(col[3]);
-
-      tr.innerHTML = `
-        <td>${col[1]}</td>
-        <td>${col[2]}</td>
-        <td>${col[3]}</td>
-        <td>${col[4]}</td>
-        <td>${col[5]}</td>
       `;
 
       tbody.appendChild(tr);
