@@ -13,6 +13,7 @@
     .red { background-color: #f8d7da; }
     .orange { background-color: #fff3cd; }
     .yellow { background-color: #fff9c4; }
+    .green { background-color: #d4edda; }
     .controls { margin-bottom: 10px; }
     button { padding: 8px 12px; cursor: pointer; margin-top: 5px; }
     @media print {
@@ -41,9 +42,10 @@
 <script>
 function getClasse(status) {
   if (!status) return "";
-  if (status.includes("🔴")) return "red";
+  if (status.includes("🔴") || status.includes("❌")) return "red";
   if (status.includes("🟠")) return "orange";
   if (status.includes("🟡")) return "yellow";
+  if (status.includes("✅")) return "green";
   return "";
 }
 
@@ -56,13 +58,72 @@ function gerarTabela() {
   tbody.innerHTML = "";
   cabecalho.innerHTML = "";
 
-  const primeiraLinha = linhas.find(l => l.split(",").length >= 5);
-  if (!primeiraLinha) return;
-
+  const primeiraLinha = linhas[0];
   const colunas = primeiraLinha.split(",").length;
 
-  // NOVO FORMATO INFANTIL (6 colunas)
-  if (colunas === 6) {
+  // DETECTAR TIPO PELO CABEÇALHO
+  const headerLower = primeiraLinha.toLowerCase();
+  const ehVacina = headerLower.includes("status vacinal");
+  const ehGestante = headerLower.includes("ig") || headerLower.includes("pendências");
+
+  // FORMATO VACINAL
+  if (ehVacina && colunas === 6) {
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Micro</th>
+      <th>Idade</th>
+      <th>Status Vacinal</th>
+      <th>Doses Faltantes</th>
+    `;
+
+    linhas.slice(1).forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 6) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[4]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col.slice(5).join(",")}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+  } else if (ehGestante && colunas === 6) {
+    // FORMATO GESTANTE
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Microárea</th>
+      <th>IG (sem)</th>
+      <th>Status</th>
+      <th>Pendências</th>
+    `;
+
+    linhas.slice(1).forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 6) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[4]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col.slice(5).join(",")}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+  } else if (colunas === 6) {
+    // FORMATO INFANTIL
     cabecalho.innerHTML = `
       <th>Nome</th>
       <th>Micro</th>
@@ -84,36 +145,6 @@ function gerarTabela() {
         <td>${col[3]}</td>
         <td>${col[4]}</td>
         <td>${col.slice(5).join(",")}</td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-
-  } else if (colunas === 7) {
-    // FORMATO ANTIGO
-    cabecalho.innerHTML = `
-      <th>Nome</th>
-      <th>Microárea</th>
-      <th>Peso/Altura</th>
-      <th>PA</th>
-      <th>Consulta</th>
-      <th>Status</th>
-    `;
-
-    linhas.forEach(linha => {
-      const col = linha.split(",");
-      if (col.length < 7) return;
-
-      const tr = document.createElement("tr");
-      tr.className = getClasse(col[6]);
-
-      tr.innerHTML = `
-        <td>${col[1]}</td>
-        <td>${col[2]}</td>
-        <td>${col[3]}</td>
-        <td>${col[4]}</td>
-        <td>${col[5]}</td>
-        <td>${col[6]}</td>
       `;
 
       tbody.appendChild(tr);
