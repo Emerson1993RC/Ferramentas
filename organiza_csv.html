@@ -23,7 +23,12 @@
 </head>
 <body>
 
-<h1>Organizador de Listas</h1>
+<h1 id="tituloPagina">Organizador de Listas</h1>
+
+<div class="controls">
+  <label><strong>Título da lista:</strong></label><br>
+  <input type="text" id="tituloInput" placeholder="Ex: Lista de Diabéticos" style="width:100%; padding:6px; margin-bottom:10px;">
+</div>
 
 <div class="controls">
   <label><strong>Cole os dados aqui:</strong></label>
@@ -50,6 +55,10 @@ function getClasse(status) {
 }
 
 function gerarTabela() {
+  const titulo = document.getElementById("tituloInput").value;
+  if (titulo) {
+    document.getElementById("tituloPagina").innerText = titulo;
+  }
   const texto = document.getElementById("entrada").value.trim();
   const linhas = texto.split("\n");
   const tbody = document.querySelector("#tabela tbody");
@@ -149,6 +158,70 @@ function gerarTabela() {
 
       tbody.appendChild(tr);
     });
+    } else if (colunas === 7) {
+    // FORMATO HAS / BUSCA ATIVA COMPLETO
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Microárea</th>
+      <th>Peso/Altura</th>
+      <th>PA</th>
+      <th>Consulta</th>
+      <th>Status</th>
+    `;
+
+    linhas.slice(1).forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 7) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[6]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col[5]}</td>
+        <td>${col[6]}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    } else if (colunas === 9) {
+    // FORMATO DIABÉTICOS / ACOMPANHAMENTO COMPLETO
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Microárea</th>
+      <th>Peso/Altura</th>
+      <th>PA</th>
+      <th>Médico (meses)</th>
+      <th>Enf (meses)</th>
+      <th>HbA1c</th>
+      <th>Status</th>
+    `;
+
+    linhas.slice(1).forEach(linha => {
+      const col = linha.split(",");
+      if (col.length < 9) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[8]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col[5]}</td>
+        <td>${col[6]}</td>
+        <td>${col[7]}</td>
+        <td>${col[8]}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
   }
 }
 </script>
