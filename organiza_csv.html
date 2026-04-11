@@ -60,7 +60,10 @@ function gerarTabela() {
     document.getElementById("tituloPagina").innerText = titulo;
   }
   const texto = document.getElementById("entrada").value.trim();
-  const linhas = texto.split("\n");
+  const linhas = texto
+    .split("\n")
+    .map(l => l.trim())
+    .filter(l => l && l !== ".")
   const tbody = document.querySelector("#tabela tbody");
   const cabecalho = document.getElementById("cabecalho");
 
@@ -68,6 +71,7 @@ function gerarTabela() {
   cabecalho.innerHTML = "";
 
   const primeiraLinha = linhas[0];
+  const temCabecalho = primeiraLinha.toLowerCase().includes("nome");
   const colunas = primeiraLinha.split(",").length;
 
   // DETECTAR TIPO PELO CABEÇALHO
@@ -85,8 +89,8 @@ function gerarTabela() {
       <th>Doses Faltantes</th>
     `;
 
-    linhas.slice(1).forEach(linha => {
-      const col = linha.split(",");
+    (temCabecalho ? linhas.slice(1) : linhas).forEach(linha => {
+      const col = linha.replace(/\.$/,"").split(",")
       if (col.length < 6) return;
 
       const tr = document.createElement("tr");
@@ -113,8 +117,36 @@ function gerarTabela() {
       <th>Pendências</th>
     `;
 
-    linhas.slice(1).forEach(linha => {
-      const col = linha.split(",");
+    (temCabecalho ? linhas.slice(1) : linhas).forEach(linha => {
+      const col = linha.replace(/\.$/,"").split(",")
+      if (col.length < 6) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[4]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col.slice(5).join(",")}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+  } else if (colunas === 6 && headerLower.includes("situação")) {
+    // FORMATO INFANTIL COM PENDÊNCIAS
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Micro</th>
+      <th>Idade</th>
+      <th>Situação</th>
+      <th>Pendências</th>
+    `;
+
+    (temCabecalho ? linhas.slice(1) : linhas).forEach(linha => {
+      const col = linha.replace(/\.$/,"").split(",")
       if (col.length < 6) return;
 
       const tr = document.createElement("tr");
@@ -142,7 +174,7 @@ function gerarTabela() {
     `;
 
     linhas.forEach(linha => {
-      const col = linha.split(",");
+      const col = linha.replace(/\.$/,"").split(",")
       if (col.length < 6) return;
 
       const tr = document.createElement("tr");
@@ -169,8 +201,8 @@ function gerarTabela() {
       <th>Status</th>
     `;
 
-    linhas.slice(1).forEach(linha => {
-      const col = linha.split(",");
+    (temCabecalho ? linhas.slice(1) : linhas).forEach(linha => {
+      const col = linha.replace(/\.$/,"").split(",")
       if (col.length < 7) return;
 
       const tr = document.createElement("tr");
@@ -201,8 +233,8 @@ function gerarTabela() {
       <th>Status</th>
     `;
 
-    linhas.slice(1).forEach(linha => {
-      const col = linha.split(",");
+    (temCabecalho ? linhas.slice(1) : linhas).forEach(linha => {
+      const col = linha.replace(/\.$/,"").split(",")
       if (col.length < 9) return;
 
       const tr = document.createElement("tr");
@@ -217,6 +249,42 @@ function gerarTabela() {
         <td>${col[6]}</td>
         <td>${col[7]}</td>
         <td>${col[8]}</td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    } else if (colunas === 10) {
+    // FORMATO VACINA DETALHADO (Penta, Pólio, Pneumo, SCR)
+    cabecalho.innerHTML = `
+      <th>Nome</th>
+      <th>Micro</th>
+      <th>Idade</th>
+      <th>Penta</th>
+      <th>Pólio</th>
+      <th>Pneumo</th>
+      <th>SCR</th>
+      <th>Status Geral</th>
+      <th>O que falta</th>
+    `;
+
+    (temCabecalho ? linhas.slice(1) : linhas).forEach(linha => {
+      const col = linha.replace(/\.$/,"").split(",")
+      if (col.length < 10) return;
+
+      const tr = document.createElement("tr");
+      tr.className = getClasse(col[8]);
+
+      tr.innerHTML = `
+        <td>${col[1]}</td>
+        <td>${col[2]}</td>
+        <td>${col[3]}</td>
+        <td>${col[4]}</td>
+        <td>${col[5]}</td>
+        <td>${col[6]}</td>
+        <td>${col[7]}</td>
+        <td>${col[8]}</td>
+        <td>${col.slice(9).join(",")}</td>
       `;
 
       tbody.appendChild(tr);
