@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha de Busca Ativa Preventiva</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; padding: 20px; font-family: 'Segoe UI', sans-serif; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .btn-pdf { background-color: #d63031; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; }
+        .status-badge { padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 0.72rem; }
+        .bg-v-pa-con { background-color: #ffdada; color: #c0392b; } /* Vermelho */
+        .bg-v-laranja { background-color: #ffead1; color: #e67e22; } /* Laranja */
+        .bg-v-peso { background-color: #fff9db; color: #947100; } /* Amarelo */
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="card p-4 mb-4 text-center">
+        <h2 class="text-primary mb-3">🩺 Monitoramento Preventivo APS (150 dias)</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <label class="form-label fw-bold">1. Selecionar CSV Bruto:</label>
+                <input class="form-control mb-3" type="file" id="csvFile" accept=".csv">
+            </div>
+            <div class="col-md-5" id="opcoesPdf" style="display:none;">
+                <label class="form-label fw-bold">2. Título da Ficha:</label>
+                <input class="form-control mb-3" type="text" id="tituloPdf" value="BUSCA ATIVA PREVENTIVA - HIPERTENSOS">
+                <button class="btn btn-pdf w-100" onclick="gerarPDF()">📄 GERAR PDF PARA CAMPO</button>
+            </div>
+        </div>
+        <div id="loading" class="mt-2 text-info" style="display:none;">Sincronizando com lógica Python...</div>
+    </div>
+
+    <div id="resultArea" style="display:none;">
+        <div class="card p-4">
+            <h4 class="mb-4">Pendências (Lógica 150/330 dias) <span id="badgeContador" class="badge bg-primary">0</span></h4>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover" id="tabelaFinal" style="font-size: 0.85rem;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nome</th>
+                            <th>Micro</th>
+                            <th>Status Preventivo</th>
+                            <th>Peso/Alt</th>
+                            <th>Últ. PA</th>
+                            <th>Últ. Consulta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dadosParaPDF = [];
+
+    document.getElementById('csvFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        document.getElementById('loading').style.display = 'block';
+        
+        Papa.parse(file, {
+            encoding: "ISO-8859-1",
+            skipEmptyLines: true,
+            complete: function(results) {
+                processar(results.data);
+            }
+        });
+    });
+
+    function converterData(texto) {
+        if (!texto || texto === '-' || texto === 'Sem registro') return null;
+        const match = texto.match(/\d{2}\/\d{2}\/\d{4}/);
+        if (!match) return null;
+        const p = match[0].split('/');
+        return new Date(p[2], p[1] - 1, p[0]);
+    }
+
+    function processar(data) {
+        let headerIdx = data.findIndex(r => r.join('').includes("Nome") && r.join('').includes("Data da última consulta"));
+        const headers = data[headerIdx].map(h => h.trim());
+        const rows = data.slice(headerIdx + 1);
+
+        const col = {
+            nome: headers.indexOf("Nome"),
+            micro: headers.indexOf("Microárea"),
+            peso: headers.indexOf("Data da ultima medição de peso e altura"),
+            pa: headers.indexOf("Data da última medição de pressão arterial"),
+            consulta: headers.indexOf("Data da última consulta")
+        };
+
+        const hoje = new Date();
+        const prazo150 = new Date(); prazo150.setDate(hoje.getDate() - 150);
+        const prazo330 = new Date(); prazo330.setDate(hoje.getDate() - 330);
+
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        dadosParaPDF = [];
+
+        rows.forEach(row => {
+            if (!row[col.nome] || row[col.nome].length < 3) return;
+
+            const dtPeso = converterData(row[col.peso]);
+            const dtPa = converterData(row[col.pa]);
+            const dtCon = converterData(row[col.consulta]);
+
+            const paVencendo = !dtPa || dtPa < prazo150;
+            const conVencendo = !dtCon || dtCon < prazo150;
+            const pesoVencendo = !dtPeso || dtPeso < prazo330;
+
+            let status = "🟢 EM DIA";
+            let css = "";
+
+            if (paVencendo && conVencendo) { status = "🔴 BUSCA ATIVA: PA/CONSULTA"; css = "bg-v-pa-con"; }
+            else if (conVencendo) { status = "🟠 BUSCA ATIVA: CONSULTA"; css = "bg-v-laranja"; }
+            else if (paVencendo) { status = "🟠 BUSCA ATIVA: PA"; css = "bg-v-laranja"; }
+            else if (pesoVencendo) { status = "🟡 BUSCA ATIVA: PESO"; css = "bg-v-peso"; }
+
+            if (status !== "🟢 EM DIA") {
+                dadosParaPDF.push([row[col.nome], row[col.micro], status.replace('🔴 ','').replace('🟠 ','').replace('🟡 ',''), row[col.pa] || '-', row[col.peso] || '-', "", ""]);
+                
+                tableBody.innerHTML += `
+                    <tr>
+                        <td><strong>${row[col.nome]}</strong></td>
+                        <td>${row[col.micro]}</td>
+                        <td><span class="status-badge ${css}">${status}</span></td>
+                        <td>${row[col.peso] || '-'}</td>
+                        <td>${row[col.pa] || '-'}</td>
+                        <td>${row[col.consulta] || '-'}</td>
+                    </tr>
+                `;
+            }
+        });
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('resultArea').style.display = 'block';
+        document.getElementById('opcoesPdf').style.display = 'block';
+        document.getElementById('badgeContador').innerText = dadosParaPDF.length;
+    }
+
+    function gerarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4');
+        const titulo = document.getElementById('tituloPdf').value.toUpperCase();
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(titulo, 14, 15);
+        
+        doc.setFontSize(9);
+        doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} | Regra: Preventiva 150 dias`, 14, 21);
+
+        doc.autoTable({
+            head: [['NOME DO PACIENTE', 'MICRO', 'TIPO DE PENDÊNCIA', 'ÚLT. PA', 'ÚLT. PESO', 'NOVA PA / OBS', 'NOVO PESO / ALT']],
+            body: dadosParaPDF,
+            startY: 25,
+            styles: { fontSize: 7, cellPadding: 2, lineWidth: 0.1 },
+            headStyles: { fillColor: [44, 62, 80], halign: 'center' },
+            columnStyles: {
+                0: { cellWidth: 55 },
+                2: { cellWidth: 40 },
+                5: { cellWidth: 40, fillColor: [248, 249, 250] },
+                6: { cellWidth: 40, fillColor: [248, 249, 250] }
+            }
+        });
+
+        doc.save(`${titulo.replace(/\s+/g, '_')}.pdf`);
+    }
+</script>
+</body>
+</html>
