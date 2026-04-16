@@ -11,21 +11,31 @@
         body { background-color: #f4f7f6; padding: 20px; font-family: 'Segoe UI', sans-serif; }
         .card { border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         .btn-pdf { background-color: #d63031; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; }
+        .btn-pdf:hover { background-color: #b71c1c; color: white; }
         .status-badge { padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 0.72rem; }
-        .bg-v-pa-con { background-color: #ffdada; color: #c0392b; } /* Vermelho */
-        .bg-v-laranja { background-color: #ffead1; color: #e67e22; } /* Laranja */
-        .bg-v-peso { background-color: #fff9db; color: #947100; } /* Amarelo */
+        .bg-v-pa-con  { background-color: #ffdada; color: #c0392b; }
+        .bg-v-laranja { background-color: #ffead1; color: #e67e22; }
+        .bg-v-peso    { background-color: #fff9db; color: #947100; }
+        #resumoCards .card-mini {
+            border-radius: 10px; padding: 12px 16px; min-width: 130px;
+            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .num-grande { font-size: 2rem; font-weight: bold; line-height: 1; }
+        .label-mini { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
+
+    <!-- Cabeçalho -->
     <div class="card p-4 mb-4 text-center">
         <h2 class="text-primary mb-3">🩺 Monitoramento Preventivo APS (150 dias)</h2>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center g-3">
             <div class="col-md-5">
-                <label class="form-label fw-bold">1. Selecionar CSV Bruto:</label>
-                <input class="form-control mb-3" type="file" id="csvFile" accept=".csv">
+                <label class="form-label fw-bold">1. Selecionar CSV (e-SUS):</label>
+                <input class="form-control mb-2" type="file" id="csvFile" accept=".csv">
+                <small class="text-muted">Exportado direto do e-SUS / Acompanhamento de Condições de Saúde</small>
             </div>
             <div class="col-md-5" id="opcoesPdf" style="display:none;">
                 <label class="form-label fw-bold">2. Título da Ficha:</label>
@@ -33,16 +43,27 @@
                 <button class="btn btn-pdf w-100" onclick="gerarPDF()">📄 GERAR PDF PARA CAMPO</button>
             </div>
         </div>
-        <div id="loading" class="mt-2 text-info" style="display:none;">Sincronizando com lógica Python...</div>
+        <div id="loading" class="mt-2 text-info fw-bold" style="display:none;">⏳ Processando...</div>
+        <div id="erroMsg" class="mt-2 text-danger fw-bold" style="display:none;"></div>
     </div>
 
+    <!-- Área de resultado -->
     <div id="resultArea" style="display:none;">
+
+        <!-- Cards de resumo -->
+        <div id="resumoCards" class="d-flex flex-wrap gap-3 mb-4 justify-content-center"></div>
+
+        <!-- Tabela de pendências -->
         <div class="card p-4">
-            <h4 class="mb-4">Pendências (Lógica 150/330 dias) <span id="badgeContador" class="badge bg-primary">0</span></h4>
+            <div class="d-flex align-items-center mb-3 gap-2">
+                <h5 class="mb-0">Pendências (Lógica 150/330 dias)</h5>
+                <span id="badgeContador" class="badge bg-primary fs-6">0</span>
+            </div>
             <div class="table-responsive">
                 <table class="table table-sm table-hover" id="tabelaFinal" style="font-size: 0.85rem;">
                     <thead class="table-dark">
                         <tr>
+                            <th>#</th>
                             <th>Nome</th>
                             <th>Micro</th>
                             <th>Status Preventivo</th>
@@ -59,119 +80,268 @@
 </div>
 
 <script>
+    // ─── Dados globais para o PDF ────────────────────────────────
     let dadosParaPDF = [];
+    let dataGerado = '';
 
+    // ─── Upload do arquivo ───────────────────────────────────────
     document.getElementById('csvFile').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
+
         document.getElementById('loading').style.display = 'block';
-        
+        document.getElementById('erroMsg').style.display = 'none';
+        document.getElementById('resultArea').style.display = 'none';
+
         Papa.parse(file, {
+            // ✅ FIX 1: forçar separador ; (CSV do e-SUS sempre usa ponto-vírgula)
+            delimiter: ";",
+            // ✅ FIX 2: encoding correto para caracteres do português
             encoding: "ISO-8859-1",
-            skipEmptyLines: true,
+            skipEmptyLines: false,   // manter linhas vazias para contagem correta
             complete: function(results) {
-                processar(results.data);
+                document.getElementById('loading').style.display = 'none';
+                try {
+                    processar(results.data);
+                } catch(err) {
+                    document.getElementById('erroMsg').innerText = '❌ Erro ao processar: ' + err.message;
+                    document.getElementById('erroMsg').style.display = 'block';
+                    console.error(err);
+                }
+            },
+            error: function(err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('erroMsg').innerText = '❌ Erro ao ler arquivo: ' + err.message;
+                document.getElementById('erroMsg').style.display = 'block';
             }
         });
     });
 
+    // ─── Converter string de data dd/mm/yyyy ────────────────────
     function converterData(texto) {
-        if (!texto || texto === '-' || texto === 'Sem registro') return null;
-        const match = texto.match(/\d{2}\/\d{2}\/\d{4}/);
+        if (!texto) return null;
+        // Limpar aspas e espaços que o e-SUS às vezes coloca
+        const limpo = texto.toString().trim().replace(/['"]/g, '');
+        if (!limpo || limpo === '-' || limpo.toLowerCase() === 'sem registro') return null;
+        // Extrair padrão dd/mm/yyyy
+        const match = limpo.match(/(\d{2})\/(\d{2})\/(\d{4})/);
         if (!match) return null;
-        const p = match[0].split('/');
-        return new Date(p[2], p[1] - 1, p[0]);
+        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
     }
 
+    // ─── Lógica principal ────────────────────────────────────────
     function processar(data) {
-        let headerIdx = data.findIndex(r => r.join('').includes("Nome") && r.join('').includes("Data da última consulta"));
-        const headers = data[headerIdx].map(h => h.trim());
-        const rows = data.slice(headerIdx + 1);
+
+        // ✅ FIX 3: Encontrar a linha real do cabeçalho com múltiplos critérios
+        // O CSV do e-SUS tem ~24 linhas de metadados antes dos dados reais.
+        // A linha do header contém ao mesmo tempo "Nome" E alguma coluna de data.
+        let headerIdx = -1;
+        for (let i = 0; i < data.length; i++) {
+            const row = data[i];
+            if (!row || row.length < 10) continue;  // cabeçalho real tem muitas colunas
+            const joined = row.join('|');
+            // Checa: deve ter "Nome" como primeiro campo E ter colunas de datas clínicas
+            const primeiroNome = row[0] && row[0].trim() === 'Nome';
+            const temDataPA    = joined.includes('Data da') && joined.includes('press');
+            const temConsulta  = joined.includes('consulta') || joined.includes('Consulta');
+            if (primeiroNome && temDataPA && temConsulta) {
+                headerIdx = i;
+                break;
+            }
+        }
+
+        if (headerIdx === -1) {
+            throw new Error('Cabeçalho não encontrado. Verifique se o arquivo é o CSV correto do e-SUS.');
+        }
+
+        const headers = data[headerIdx].map(h => h ? h.trim() : '');
+
+        // ✅ FIX 4: Mapear colunas por nome exato (robusto a mudanças de posição)
+        function findCol(termos) {
+            for (const termo of termos) {
+                const idx = headers.findIndex(h => h.toLowerCase().includes(termo.toLowerCase()));
+                if (idx !== -1) return idx;
+            }
+            return -1;
+        }
 
         const col = {
-            nome: headers.indexOf("Nome"),
-            micro: headers.indexOf("Microárea"),
-            peso: headers.indexOf("Data da ultima medição de peso e altura"),
-            pa: headers.indexOf("Data da última medição de pressão arterial"),
-            consulta: headers.indexOf("Data da última consulta")
+            nome:    findCol(['Nome']),
+            micro:   findCol(['Microárea', 'Microarea']),
+            peso:    findCol(['Data da ultima medição de peso', 'Data da última medição de peso']),
+            pa:      findCol(['Data da última medição de pressão', 'Data da ultima medição de pressão']),
+            consulta:findCol(['Data da última consulta', 'Data da ultima consulta'])
         };
 
-        const hoje = new Date();
-        const prazo150 = new Date(); prazo150.setDate(hoje.getDate() - 150);
-        const prazo330 = new Date(); prazo330.setDate(hoje.getDate() - 330);
+        // Verificar se colunas essenciais foram encontradas
+        const faltando = Object.entries(col).filter(([k,v]) => v === -1).map(([k]) => k);
+        if (faltando.length > 0) {
+            throw new Error(`Colunas não encontradas: ${faltando.join(', ')}. Verifique o arquivo.`);
+        }
 
-        const tableBody = document.getElementById('tableBody');
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        const prazo150 = new Date(hoje); prazo150.setDate(hoje.getDate() - 150);
+        const prazo330 = new Date(hoje); prazo330.setDate(hoje.getDate() - 330);
+
+        dataGerado = hoje.toLocaleDateString('pt-BR');
+
+        const tableBody   = document.getElementById('tableBody');
         tableBody.innerHTML = '';
         dadosParaPDF = [];
 
-        rows.forEach(row => {
-            if (!row[col.nome] || row[col.nome].length < 3) return;
+        let contadores = {
+            'PA/CONSULTA': 0,
+            'CONSULTA':    0,
+            'PA':          0,
+            'PESO':        0,
+            'EM DIA':      0,
+            'TOTAL':       0
+        };
 
-            const dtPeso = converterData(row[col.peso]);
-            const dtPa = converterData(row[col.pa]);
-            const dtCon = converterData(row[col.consulta]);
+        // Linhas de dados (após o header)
+        const dataRows = data.slice(headerIdx + 1);
+        let seq = 0;
 
-            const paVencendo = !dtPa || dtPa < prazo150;
-            const conVencendo = !dtCon || dtCon < prazo150;
-            const pesoVencendo = !dtPeso || dtPeso < prazo330;
+        dataRows.forEach(row => {
+            if (!row || row.length < 5) return;
+            const nome = row[col.nome] ? row[col.nome].trim() : '';
+            if (nome.length < 3) return;  // pular linhas vazias / rodapé
 
-            let status = "🟢 EM DIA";
-            let css = "";
+            contadores['TOTAL']++;
 
-            if (paVencendo && conVencendo) { status = "🔴 BUSCA ATIVA: PA/CONSULTA"; css = "bg-v-pa-con"; }
-            else if (conVencendo) { status = "🟠 BUSCA ATIVA: CONSULTA"; css = "bg-v-laranja"; }
-            else if (paVencendo) { status = "🟠 BUSCA ATIVA: PA"; css = "bg-v-laranja"; }
-            else if (pesoVencendo) { status = "🟡 BUSCA ATIVA: PESO"; css = "bg-v-peso"; }
+            const micro     = row[col.micro]    ? row[col.micro].trim().replace(/['"]/g, '') : '-';
+            const dtPeso    = converterData(row[col.peso]);
+            const dtPa      = converterData(row[col.pa]);
+            const dtCon     = converterData(row[col.consulta]);
+            const strPeso   = row[col.peso]    ? row[col.peso].trim().replace(/['"]/g, '')    : 'Pendente';
+            const strPa     = row[col.pa]      ? row[col.pa].trim().replace(/['"]/g, '')      : 'Pendente';
+            const strCon    = row[col.consulta]? row[col.consulta].trim().replace(/['"]/g,'') : 'Pendente';
 
-            if (status !== "🟢 EM DIA") {
-                dadosParaPDF.push([row[col.nome], row[col.micro], status.replace('🔴 ','').replace('🟠 ','').replace('🟡 ',''), row[col.pa] || '-', row[col.peso] || '-', "", ""]);
-                
-                tableBody.innerHTML += `
-                    <tr>
-                        <td><strong>${row[col.nome]}</strong></td>
-                        <td>${row[col.micro]}</td>
-                        <td><span class="status-badge ${css}">${status}</span></td>
-                        <td>${row[col.peso] || '-'}</td>
-                        <td>${row[col.pa] || '-'}</td>
-                        <td>${row[col.consulta] || '-'}</td>
-                    </tr>
-                `;
+            const paVenc  = !dtPa  || dtPa  < prazo150;
+            const conVenc = !dtCon || dtCon < prazo150;
+            const pesVenc = !dtPeso|| dtPeso< prazo330;
+
+            let status = '';
+            let css    = '';
+            let chave  = '';
+
+            if (paVenc && conVenc) {
+                status = '🔴 BUSCA ATIVA: PA/CONSULTA'; css = 'bg-v-pa-con'; chave = 'PA/CONSULTA';
+            } else if (conVenc) {
+                status = '🟠 BUSCA ATIVA: CONSULTA';    css = 'bg-v-laranja'; chave = 'CONSULTA';
+            } else if (paVenc) {
+                status = '🟠 BUSCA ATIVA: PA';          css = 'bg-v-laranja'; chave = 'PA';
+            } else if (pesVenc) {
+                status = '🟡 BUSCA ATIVA: PESO';        css = 'bg-v-peso';    chave = 'PESO';
+            } else {
+                contadores['EM DIA']++;
+                return;  // Em dia — não exibe na tabela
             }
+
+            contadores[chave]++;
+            seq++;
+
+            // Dados para o PDF (sem emojis no tipo de pendência)
+            dadosParaPDF.push([
+                nome, micro,
+                status.replace('🔴 ','').replace('🟠 ','').replace('🟡 ',''),
+                strPa !== '-' ? strPa : 'Pendente',
+                strPeso !== '-' ? strPeso : 'Pendente',
+                '',  // nova PA / OBS (preenchido em campo)
+                ''   // novo peso / alt (preenchido em campo)
+            ]);
+
+            // Linha na tabela HTML
+            tableBody.innerHTML += `
+                <tr>
+                    <td class="text-muted">${seq}</td>
+                    <td><strong>${nome}</strong></td>
+                    <td>${micro}</td>
+                    <td><span class="status-badge ${css}">${status}</span></td>
+                    <td>${strPeso}</td>
+                    <td>${strPa}</td>
+                    <td>${strCon}</td>
+                </tr>
+            `;
         });
 
-        document.getElementById('loading').style.display = 'none';
+        // ── Atualizar badge e cards de resumo ────────────────────
+        document.getElementById('badgeContador').innerText = dadosParaPDF.length;
+
+        const cardsDiv = document.getElementById('resumoCards');
+        cardsDiv.innerHTML = '';
+        const cards = [
+            { label: 'PA + Consulta', valor: contadores['PA/CONSULTA'], bg: '#fff0f0', cor: '#c0392b' },
+            { label: 'Consulta',      valor: contadores['CONSULTA'],    bg: '#fff4e6', cor: '#e67e22' },
+            { label: 'PA',            valor: contadores['PA'],          bg: '#fff4e6', cor: '#e67e22' },
+            { label: 'Peso/Altura',   valor: contadores['PESO'],        bg: '#fffde6', cor: '#947100' },
+            { label: 'Em Dia',        valor: contadores['EM DIA'],      bg: '#eafaf1', cor: '#27ae60' },
+            { label: 'Total',         valor: contadores['TOTAL'],       bg: '#eaf2ff', cor: '#2c3e50' },
+        ];
+        cards.forEach(c => {
+            cardsDiv.innerHTML += `
+                <div class="card-mini" style="background:${c.bg}; border: 1.5px solid ${c.cor}30;">
+                    <div class="num-grande" style="color:${c.cor}">${c.valor}</div>
+                    <div class="label-mini" style="color:${c.cor}">${c.label}</div>
+                </div>`;
+        });
+
         document.getElementById('resultArea').style.display = 'block';
         document.getElementById('opcoesPdf').style.display = 'block';
-        document.getElementById('badgeContador').innerText = dadosParaPDF.length;
     }
 
+    // ─── Gerar PDF ───────────────────────────────────────────────
     function gerarPDF() {
+        if (dadosParaPDF.length === 0) {
+            alert('Nenhuma pendência para exportar.');
+            return;
+        }
+
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('l', 'mm', 'a4');
+        const doc = new jsPDF('l', 'mm', 'a4');   // paisagem A4
         const titulo = document.getElementById('tituloPdf').value.toUpperCase();
 
-        doc.setFont("helvetica", "bold");
+        doc.setFont('helvetica', 'bold');
         doc.setFontSize(14);
         doc.text(titulo, 14, 15);
-        
+
+        doc.setFont('helvetica', 'normal');
         doc.setFontSize(9);
-        doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} | Regra: Preventiva 150 dias`, 14, 21);
+        doc.text(`Gerado em: ${dataGerado} | Regra: Preventiva 150 dias`, 14, 21);
 
         doc.autoTable({
-            head: [['NOME DO PACIENTE', 'MICRO', 'TIPO DE PENDÊNCIA', 'ÚLT. PA', 'ÚLT. PESO', 'NOVA PA / OBS', 'NOVO PESO / ALT']],
+            head: [[
+                'NOME DO PACIENTE', 'MICRO', 'TIPO DE PENDÊNCIA',
+                'ÚLT. PA', 'ÚLT. PESO', 'NOVA PA / OBS', 'NOVO PESO / ALT'
+            ]],
             body: dadosParaPDF,
             startY: 25,
-            styles: { fontSize: 7, cellPadding: 2, lineWidth: 0.1 },
-            headStyles: { fillColor: [44, 62, 80], halign: 'center' },
+            styles: {
+                fontSize: 7,
+                cellPadding: 2,
+                lineWidth: 0.1,
+                font: 'helvetica'
+            },
+            headStyles: {
+                fillColor: [44, 62, 80],
+                halign: 'center',
+                fontStyle: 'bold'
+            },
+            alternateRowStyles: { fillColor: [248, 249, 250] },
             columnStyles: {
                 0: { cellWidth: 55 },
+                1: { cellWidth: 12, halign: 'center' },
                 2: { cellWidth: 40 },
-                5: { cellWidth: 40, fillColor: [248, 249, 250] },
-                6: { cellWidth: 40, fillColor: [248, 249, 250] }
+                3: { cellWidth: 22, halign: 'center' },
+                4: { cellWidth: 22, halign: 'center' },
+                5: { cellWidth: 40, fillColor: [240, 248, 255] },
+                6: { cellWidth: 40, fillColor: [240, 248, 255] }
             }
         });
 
-        doc.save(`${titulo.replace(/\s+/g, '_')}.pdf`);
+        const nomeArquivo = titulo.replace(/\s+/g, '_').replace(/[^A-Z0-9_]/gi, '') + '.pdf';
+        doc.save(nomeArquivo);
     }
 </script>
 </body>
