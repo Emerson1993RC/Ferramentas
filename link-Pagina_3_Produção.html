@@ -1,118 +1,253 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produção do enfermeiro - Croatá dos Martins - USF 1</title>
+    <title>Produção do Enfermeiro - Croatá dos Martins - USF 1</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
         }
         .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+        header {
             text-align: center;
-            background-color: #fff;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
+            margin-bottom: 45px;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 24px;
+        header h1 {
+            color: #1565c0;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
-        .link-button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #007bff;
-            color: white;
+        header p {
+            color: #546e7a;
+            font-size: 1.05rem;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 26px;
+            text-align: center;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+            transition: all 0.3s ease;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            color: inherit;
+            border: 2px solid transparent;
+            cursor: pointer;
         }
-        .link-button:hover {
-            background-color: #0056b3;
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 32px rgba(0,0,0,0.12);
+            border-color: #42a5f5;
+        }
+        .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+        }
+        .card h2 {
+            color: #263238;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+        .card p {
+            color: #607d8b;
+            font-size: 0.82rem;
+            line-height: 1.4;
+        }
+        .card.drive .icon      { background: #e3f2fd; color: #1565c0; }
+        .card.check .icon      { background: #e8f5e9; color: #2e7d32; }
+        .card.ficha .icon      { background: #fff3e0; color: #ef6c00; }
+        .card.acs .icon        { background: #fce4ec; color: #c2185b; }
+        .card.busca .icon      { background: #f3e5f5; color: #6a1b9a; }
+        .card.hans .icon       { background: #ffebee; color: #c62828; }
+        .card.anti .icon       { background: #e0f2f1; color: #00695c; }
+        .card.nasc .icon       { background: #e1f5fe; color: #0277bd; }
+        .card.obito .icon      { background: #eceff1; color: #455a64; }
+        .card.vac .icon        { background: #fff8e1; color: #f9a825; }
+        .card.sif .icon        { background: #fce4ec; color: #ad1457; }
+        .card.crianca .icon    { background: #e8f5e9; color: #388e3c; }
+        .card.evento .icon     { background: #ffebee; color: #b71c1c; }
+        .card.desfecho .icon   { background: #f3e5f5; color: #7b1fa2; }
+        .card.estrat .icon     { background: #e0f7fa; color: #00838f; }
+        .card.sd .icon         { background: #fff3e0; color: #e65100; }
+        .card.link .icon       { background: #e8f5e9; color: #2e7d32; }
+        .card.teste .icon      { background: #e3f2fd; color: #1565c0; }
+        .card.voltar .icon     { background: #eceff1; color: #455a64; }
+        .card.planilhas .icon  { background: #e1f5fe; color: #0277bd; }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #90a4ae;
+            font-size: 0.82rem;
+        }
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.3rem; }
+            .card { padding: 20px; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>📈 Produção do Enfermeiro</h1>
+            <p>Croatá dos Martins — USF 1</p>
+        </header>
 
-<div class="container">
-    <h1>Produção do enfermeiro - Croatá dos Martins - USF 1</h1>
-    
-    <a href="https://drive.google.com/drive/folders/1VbtnBH1wrrgn-Le7awhraVHzgxcIfsoj?usp=sharing" class="link-button" target="_blank">Drive Principal</a>
+        <div class="cards">
+            <a href="https://drive.google.com/drive/folders/1VbtnBH1wrrgn-Le7awhraVHzgxcIfsoj?usp=sharing" class="card drive" target="_blank">
+                <div class="icon">📁</div>
+                <h2>Drive Principal</h2>
+                <p>Pasta principal do Google Drive.</p>
+            </a>
 
-    <a href="https://docs.google.com/spreadsheets/d/1tAe2XBQ9MGKCFyizOFZ0mM7amdwQpnwz_kTorz4BxcI/edit?usp=sharing" class="link-button" target="_blank">Check List da produção</a>
-    
-    <a href="https://docs.google.com/spreadsheets/d/1vpBQ0B20AtCbuo0--1XFBPJO2mOF_Zw0fI_eO2VVZs0/edit?usp=sharing" class="link-button" target="_blank">Ficha de controle</a>
-    
-    <a href="https://docs.google.com/spreadsheets/d/1OX3qpi-4-XOKyV4sIbOROX0Bx2MLHMlZIb14KptZkQs/edit?usp=sharing" class="link-button" target="_blank">Produção das ACS</a>
-    
-     <a href="https://docs.google.com/spreadsheets/d/1eeNOCgQHmwaw38dWGSpvpCmROsNA_lCw4sInN1onwjQ/edit?usp=sharing" class="link-button" target="_blank">Formulario de buscativia</a>
-    
-     <a href="https://docs.google.com/spreadsheets/d/1bEGRvEqCXQ3yHOzsOGip5XYys08ms_B9TxDWEbcRvnU/edit?usp=sharing" class="link-button" target="_blank">Hanseniase e tuberculose</a>
-    
-     <a href="https://drive.google.com/drive/folders/1TwYNXHx8Sy82W7IQakZlNYxz1f-kcCvX?usp=sharing" class="link-button" target="_blank">Acidente antirrábico</a> 
+            <a href="https://docs.google.com/spreadsheets/d/1tAe2XBQ9MGKCFyizOFZ0mM7amdwQpnwz_kTorz4BxcI/edit?usp=sharing" class="card check" target="_blank">
+                <div class="icon">✅</div>
+                <h2>Check List da Produção</h2>
+                <p>Lista de verificação da produção mensal.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/1i62jOGjAPQ6n9RXJGWpAR355NF_PQWJmnNTMgxnrUQI/edit?usp=sharing" class="link-button" target="_blank">Consolidado Mensal de Nascidos Vivos</a>
+            <a href="https://docs.google.com/spreadsheets/d/1vpBQ0B20AtCbuo0--1XFBPJO2mOF_Zw0fI_eO2VVZs0/edit?usp=sharing" class="card ficha" target="_blank">
+                <div class="icon">📋</div>
+                <h2>Ficha de Controle</h2>
+                <p>Ficha para controle de atividades e procedimentos.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/1v_iRHO2RRLb6RgtAFITzvG7wOo4TqQoj8Jk04Ss6CVk/edit?usp=sharing" class="link-button" target="_blank">Consolidado Mensal de obidos</a>
+            <a href="https://docs.google.com/spreadsheets/d/1OX3qpi-4-XOKyV4sIbOROX0Bx2MLHMlZIb14KptZkQs/edit?usp=sharing" class="card acs" target="_blank">
+                <div class="icon">👨‍⚕️</div>
+                <h2>Produção das ACS</h2>
+                <p>Acompanhamento da produção dos Agentes Comunitários de Saúde.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/1elDtTJaxdAzBinVH-FX5ixfjz6upCedMxnFbnsJO918/edit?usp=sharing" class="link-button" target="_blank">POLIOMIELITE e PENTAVALENTE_edit</a>
+            <a href="https://docs.google.com/spreadsheets/d/1eeNOCgQHmwaw38dWGSpvpCmROsNA_lCw4sInN1onwjQ/edit?usp=sharing" class="card busca" target="_blank">
+                <div class="icon">🔍</div>
+                <h2>Formulário de Busca Ativa</h2>
+                <p>Registro das ações de busca ativa na comunidade.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/1_AeOhmqLFhNyrg0VdI2NU3BapV7aKB44P6K1P0_JF54/edit?usp=sharing" class="link-button" target="_blank">Monitoramento - Sifilis</a>
+            <a href="https://docs.google.com/spreadsheets/d/1bEGRvEqCXQ3yHOzsOGip5XYys08ms_B9TxDWEbcRvnU/edit?usp=sharing" class="card hans" target="_blank">
+                <div class="icon">🩺</div>
+                <h2>Hanseníase e Tuberculose</h2>
+                <p>Controle de casos de hanseníase e tuberculose.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/17Jdwx0eHAovooTvRP_v6sJjh8Ek83II51po-m4nTnII/edit?usp=sharing" class="link-button" target="_blank">Saúde da criança e do adolescente</a>
+            <a href="https://drive.google.com/drive/folders/1TwYNXHx8Sy82W7IQakZlNYxz1f-kcCvX?usp=sharing" class="card anti" target="_blank">
+                <div class="icon">🐕</div>
+                <h2>Acidente Antirrábico</h2>
+                <p>Registro de acidentes por animais peçonhentos.</p>
+            </a>
 
-     <a href="https://drive.google.com/drive/folders/1GKawNaEuKn_z1CZtuQ2FRqx_ba5VGP7s?usp=sharing" class="link-button" target="_blank">Eventos adversos da vacina</a>
+            <a href="https://docs.google.com/spreadsheets/d/1i62jOGjAPQ6n9RXJGWpAR355NF_PQWJmnNTMgxnrUQI/edit?usp=sharing" class="card nasc" target="_blank">
+                <div class="icon">👶</div>
+                <h2>Consolidado Mensal de Nascidos Vivos</h2>
+                <p>Relatório mensal de nascimentos na área.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/1Y4_YPEK_AueC_xLbWDQTDZA5q84igY-VQA6J-5e3Wvo/edit?usp=sharing" class="link-button" target="_blank">Desfecho da gestação</a>
+            <a href="https://docs.google.com/spreadsheets/d/1v_iRHO2RRLb6RgtAFITzvG7wOo4TqQoj8Jk04Ss6CVk/edit?usp=sharing" class="card obito" target="_blank">
+                <div class="icon">📉</div>
+                <h2>Consolidado Mensal de Óbitos</h2>
+                <p>Relatório mensal de óbitos na área.</p>
+            </a>
 
-     <a href="https://docs.google.com/spreadsheets/d/1IGkaWSgvp8QocDJ6SOCO4nCPXQhfWcpx61vxACLmXvA/edit?gid=0#gid=0" class="link-button" target="_blank">Estratificação de risco</a>
+            <a href="https://docs.google.com/spreadsheets/d/1elDtTJaxdAzBinVH-FX5ixfjz6upCedMxnFbnsJO918/edit?usp=sharing" class="card vac" target="_blank">
+                <div class="icon">💉</div>
+                <h2>Poliomielite e Pentavalente</h2>
+                <p>Controle da cobertura vacinal específica.</p>
+            </a>
 
-     <a href="https://drive.google.com/drive/folders/1sVxmaoiT2uhXCmKSrv8pNdxJGDvhteyT?usp=sharing" class="link-button" target="_blank">Sindromes diarreicas</a>
+            <a href="https://docs.google.com/spreadsheets/d/1_AeOhmqLFhNyrg0VdI2NU3BapV7aKB44P6K1P0_JF54/edit?usp=sharing" class="card sif" target="_blank">
+                <div class="icon">🔬</div>
+                <h2>Monitoramento — Sífilis</h2>
+                <p>Acompanhamento dos casos de sífilis.</p>
+            </a>
 
-     <a href="https://docs.google.com/forms/d/e/1FAIpQLScPsIpnnr3ehL9UFvxP8TECawZ-HPk0YaTqebGJubzjyCImIQ/viewform?pli=1" class="link-button" target="_blank">Link de produção mensal</a>
+            <a href="https://docs.google.com/spreadsheets/d/17Jdwx0eHAovooTvRP_v6sJjh8Ek83II51po-m4nTnII/edit?usp=sharing" class="card crianca" target="_blank">
+                <div class="icon">🧒</div>
+                <h2>Saúde da Criança e do Adolescente</h2>
+                <p>Indicadores de saúde infantil e adolescente.</p>
+            </a>
 
-     <a href="https://docs.google.com/forms/d/e/1FAIpQLSenmZZ60HIqauav7LzpNLVMASOCoxxxAwG7TQtJqsQWBNv0nw/viewform" class="link-button" target="_blank">Link de teste rapido</a>
+            <a href="https://drive.google.com/drive/folders/1GKawNaEuKn_z1CZtuQ2FRqx_ba5VGP7s?usp=sharing" class="card evento" target="_blank">
+                <div class="icon">⚠️</div>
+                <h2>Eventos Adversos da Vacina</h2>
+                <p>Notificação de eventos adversos pós-vacinação.</p>
+            </a>
 
-     <a href="https://emerson1993rc.github.io/Ferramentas/botoes.html" class="link-button" target="_blank">Voltar para página 1</a>
+            <a href="https://docs.google.com/spreadsheets/d/1Y4_YPEK_AueC_xLbWDQTDZA5q84igY-VQA6J-5e3Wvo/edit?usp=sharing" class="card desfecho" target="_blank">
+                <div class="icon">📄</div>
+                <h2>Desfecho da Gestação</h2>
+                <p>Registro dos desfechos obstétricos.</p>
+            </a>
 
-     <a href="https://emerson1993rc.github.io/Ferramentas/link-Pagina%202-%20Planilhas.html" class="link-button" target="_blank">Voltar para página 2</a>    
-  
-     </div>
-    
+            <a href="https://docs.google.com/spreadsheets/d/1IGkaWSgvp8QocDJ6SOCO4nCPXQhfWcpx61vxACLmXvA/edit?gid=0#gid=0" class="card estrat" target="_blank">
+                <div class="icon">⚡</div>
+                <h2>Estratificação de Risco</h2>
+                <p>Classificação de risco dos pacientes.</p>
+            </a>
+
+            <a href="https://drive.google.com/drive/folders/1sVxmaoiT2uhXCmKSrv8pNdxJGDvhteyT?usp=sharing" class="card sd" target="_blank">
+                <div class="icon">🦠</div>
+                <h2>Síndromes Diarreicas</h2>
+                <p>Documentação sobre síndromes diarreicas.</p>
+            </a>
+
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScPsIpnnr3ehL9UFvxP8TECawZ-HPk0YaTqebGJubzjyCImIQ/viewform?pli=1" class="card link" target="_blank">
+                <div class="icon">📝</div>
+                <h2>Link de Produção Mensal</h2>
+                <p>Formulário para envio da produção mensal.</p>
+            </a>
+
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSenmZZ60HIqauav7LzpNLVMASOCoxxxAwG7TQtJqsQWBNv0nw/viewform" class="card teste" target="_blank">
+                <div class="icon">🧪</div>
+                <h2>Link de Teste Rápido</h2>
+                <p>Formulário para registro de testes rápidos.</p>
+            </a>
+
+            <a href="link-Pagina%202-%20Planilhas.html" class="card planilhas">
+                <div class="icon">📊</div>
+                <h2>Página 2 — Planilhas</h2>
+                <p>Acesse as planilhas e documentos complementares.</p>
+            </a>
+
+            <a href="index.html" class="card voltar">
+                <div class="icon">🔙</div>
+                <h2>Voltar para Página Inicial</h2>
+                <p>Retorne ao menu principal de ferramentas.</p>
+            </a>
+        </div>
+
+        <footer>
+            <p>© 2026 Emerson Rodrigues Cardoso — Todos os direitos reservados.</p>
+        </footer>
+    </div>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
